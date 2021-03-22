@@ -1,0 +1,20 @@
+  
+  html, body { height: 100%; }
+  html,
+  body {
+    background-color: darkslategrey;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+
+canvas {
+    /* position: absolute; */
+    top: 0;
+  }
+
+  .controls {
+    display: none;
+  }

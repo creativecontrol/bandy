@@ -1,0 +1,16 @@
+{
+  "name": "pongsemble",
+  "version": "1.0.0",
+  "description": "*pongsemble* is a multi-user interface for capturing and aggregating user button clicks and plugging them into piano Genie for control of MIDI musical instruments.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
