@@ -61,9 +61,9 @@ class PongsembleClient {
     this.ballY = this.paddleY - this.ballRadius;
 
     this.numberOfBlocks = 8;
-    this.blockSize = this.canvas.width / 8;
+    this.blockSize = this.canvas.width / 12;
     // this.blockSize = this.blockSize < 60 ? this.blockSize : 60;
-    this.blockSpacing = 0;
+    this.blockSpacing = this.blockSize/3;
     this.blockColors = [
       ['#EE2B29', '#f25a58'],
       ['#ff9800', '#ffad33'],
@@ -134,9 +134,9 @@ class PongsembleClient {
     this.ballX = this.paddleCenter;
     this.ballY = this.paddleY - this.ballRadius;
 
-    this.blockSize = this.canvas.width / 8;
+    this.blockSize = this.canvas.width / 12;
     // this.blockSize = this.blockSize < 60 ? this.blockSize : 60;
-    this.blockSpacing = 0;
+    this.blockSpacing = this.blockSize/3;
     this.blocksWidth = (this.numberOfBlocks * this.blockSize) +
       ((this.numberOfBlocks-1)*this.blockSpacing);
     this.blocksLeft = (this.canvas.width - this.blocksWidth) / 2;
