@@ -24,11 +24,13 @@ class PongsembleClient {
   constructor() {
     this.canvas = document.querySelector('#canvas');
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
     this.canvasColor = '#333333';
+    this.setCanvasSize();
 
     this.drawInterval = 10;
+
+    this.ON = 1;
+    this.OFF = 0;
 
     this.ballColor = '#0095DD';
     this.ballX = canvas.width/2;
@@ -82,15 +84,67 @@ class PongsembleClient {
     this.blocksLeft = (this.canvas.width - this.blocksWidth) / 2;
     this.blocksY = 40;
 
+    this.database = null;
+    this.playerId = null;
     // Attach to firebase database
-
+    firebase.auth().signInAnonymously()
+        .then(() => {
+          this.connectToDatabase();
+          this.createNewPlayerEntry();
+          this.run();
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // ...
+        });
     // Create a new user entry
 
     // Store that connection or user Id
 
     // On disconnect remove player entry in database
+  }
 
+  /**
+   *
+   */
+  connectToDatabase() {
+    this.database = firebase.database();
+  }
+
+  /**
+   *
+   */
+  createNewPlayerEntry() {
+    const playersRef = this.database.ref('players/');
+    this.playerId = playersRef.push();
+    console.log(this.playerId);
+    this.playerId.set({
+      '0': this.OFF,
+      '1': this.OFF,
+      '2': this.OFF,
+      '3': this.OFF,
+      '4': this.OFF,
+      '5': this.OFF,
+      '6': this.OFF,
+      '7': this.OFF,
+    });
+  }
+
+  /**
+   *
+   */
+  removePlayerEntry() {
+    this.playerId.set(null);
+  }
+
+  /**
+   *
+   */
+  run() {
+    console.log('starting run');
     window.addEventListener('resize', this.resizeCanvas.bind(this));
+    window.addEventListener('beforeunload', this.removePlayerEntry.bind(this));
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
     document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
     this.interval = setInterval(this.draw.bind(this), this.drawInterval);
@@ -118,12 +172,24 @@ class PongsembleClient {
 
   /**
    *
+   */
+  setCanvasSize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+
+    // if (devicePixelRatio >= 2) {
+    //   this.canvas.width *= 2;
+    //   this.canvas.height *= 2;
+    // }
+  }
+
+  /**
+   *
   */
   resizeCanvas() {
     this.ballStopped = true;
 
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.setCanvasSize();
 
     // Recalc the elements
     this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
@@ -312,9 +378,15 @@ class PongsembleClient {
   flashBlock(block) {
     this.blocksHit[block] = 1;
     // Set the value in the database here
+    let status = {};
+    status[block.toString()] = this.ON;
+    this.playerId.update(status);
     setTimeout(() => {
       this.blocksHit[block] = 0;
       // Set the value in the database here
+      status = {};
+      status[block.toString()] = this.OFF;
+      this.playerId.update(status);
     }, 100);
   }
 
