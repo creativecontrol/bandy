@@ -86,11 +86,24 @@ class PongsembleController {
   connectToDatabase() {
     this.database = firebase.database();
 
+    const settings = firebase.database().ref('settings/');
+    settings.on('value', (snapshot) => {
+      this.applySettings(snapshot.val);
+    })
+
     const players = firebase.database().ref('players/');
     players.on('value', (snapshot) => {
       const playerStates = snapshot.val();
       this.applyPlayerStates(playerStates);
     });
+  }
+
+  /**
+   * 
+   * @param {*} settings
+   */
+  applySettings(settings) {
+    this.ballSpeed =
   }
 
   /**
@@ -102,7 +115,7 @@ class PongsembleController {
     // if all players' button X changes to 0 change to zero
     _.forEach(playerStates, (player, playerId) => {
       if (playerId != 'schema') {
-        console.log(`${playerId} ${player}`)
+        console.log(`${playerId} ${player}`);
         _.forEach(player, (note, key) => {
           if (note == 1) {
             console.log(`note ${key} on`);

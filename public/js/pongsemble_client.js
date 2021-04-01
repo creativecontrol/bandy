@@ -110,6 +110,21 @@ class PongsembleClient {
    */
   connectToDatabase() {
     this.database = firebase.database();
+
+    const settings = firebase.database().ref('settings/');
+    settings.on('value', (snapshot) => {
+      this.applySettings(snapshot.val);
+    });
+  }
+
+  /**
+   * 
+   * @param {*} settings
+   */
+  applySettings(settings) {
+    this.ballSpeed = settings['ballStartSpeed'];
+    this.numberOfPlayers = settings['numberOfPlayers'];
+    this.isLive = settings['isLive'];
   }
 
   /**
