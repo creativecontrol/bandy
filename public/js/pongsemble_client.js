@@ -145,8 +145,19 @@ class PongsembleClient {
     console.log('starting run');
     window.addEventListener('resize', this.resizeCanvas.bind(this));
     window.addEventListener('beforeunload', this.removePlayerEntry.bind(this));
+
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
     document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
+
+    document.addEventListener('touchstart',
+        this.touchstartHandler.bind(this), false);
+    document.addEventListener('touchmove',
+        this.touchmoveHandler.bind(this), false);
+    document.addEventListener('touchcancel',
+        this.touchcancelHandler.bind(this), false);
+    document.addEventListener('touchend',
+        this.touchendHandler.bind(this), false);
+
     this.interval = setInterval(this.draw.bind(this), this.drawInterval);
   }
 
@@ -414,6 +425,38 @@ class PongsembleClient {
     } else if (e.key == 'Left' || e.key == 'ArrowLeft') {
       this.leftPressed = false;
     }
+  }
+
+  /**
+   *
+   * @param {Event} e
+   */
+  touchstartHandler(e) {
+
+  }
+
+  /**
+   *
+   * @param {Event} e
+   */
+  touchendHandler(e) {
+
+  }
+
+  /**
+   *
+   * @param {Event} e
+   */
+  touchmoveHandler(e) {
+
+  }
+
+  /**
+   *
+   * @param {Event} e
+   */
+  touchcancelHandler(e) {
+
   }
 } // End of PonsembleClient Class
 
