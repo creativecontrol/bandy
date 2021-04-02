@@ -17,7 +17,7 @@
  *  - Create a splashscreen
  *  - Add touch controls; touch once for first fire, scroll for paddle
  */
-class PongsembleClient {
+class BandyClient {
   /**
     *
     */
@@ -25,6 +25,7 @@ class PongsembleClient {
     this.canvas = document.querySelector('#canvas');
     this.ctx = this.canvas.getContext('2d');
     this.canvasColor = '#333333';
+    this.headerSize = 60;
     this.setCanvasSize();
 
     this.drawInterval = 10;
@@ -48,6 +49,7 @@ class PongsembleClient {
     this.moveY = -this.ballSpeed * Math.cos((Math.PI / 180) *
       ((90 * (Math.random())) - 45));
 
+    this.paddleColor = '#0095DD';
     this.paddleWidth = 75;
     this.paddleHeight = 15;
     this.paddleBottomPadding = 55;
@@ -85,6 +87,7 @@ class PongsembleClient {
     this.blocksY = 40;
 
     this.database = null;
+    this.room = 'LiveRoom';
     this.playerId = null;
     // Attach to firebase database
     firebase.auth().signInAnonymously()
@@ -94,9 +97,9 @@ class PongsembleClient {
           this.run();
         })
         .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // ...
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(`${errorCode} ${errorMessage}`);
         });
     // Create a new user entry
 
@@ -118,7 +121,7 @@ class PongsembleClient {
   }
 
   /**
-   * 
+   *
    * @param {*} settings
    */
   applySettings(settings) {
@@ -131,7 +134,7 @@ class PongsembleClient {
    *
    */
   createNewPlayerEntry() {
-    const playersRef = this.database.ref('players/');
+    const playersRef = this.database.ref(`${this.room}/players/`);
     this.playerId = playersRef.push();
     console.log(this.playerId);
     this.playerId.set({
@@ -164,13 +167,13 @@ class PongsembleClient {
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
     document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
 
-    document.addEventListener('touchstart',
+    this.canvas.addEventListener('touchstart',
         this.touchstartHandler.bind(this), false);
-    document.addEventListener('touchmove',
+    this.canvas.addEventListener('touchmove',
         this.touchmoveHandler.bind(this), false);
-    document.addEventListener('touchcancel',
+    this.canvas.addEventListener('touchcancel',
         this.touchcancelHandler.bind(this), false);
-    document.addEventListener('touchend',
+    this.canvas.addEventListener('touchend',
         this.touchendHandler.bind(this), false);
 
     this.interval = setInterval(this.draw.bind(this), this.drawInterval);
@@ -201,7 +204,7 @@ class PongsembleClient {
    */
   setCanvasSize() {
     this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.canvas.height = window.innerHeight-this.headerSize;
 
     // if (devicePixelRatio >= 2) {
     //   this.canvas.width *= 2;
@@ -273,8 +276,9 @@ class PongsembleClient {
     if (this.ballY + this.moveY < this.ballRadius) {
       this.moveY = -this.moveY;
     } else if (this.ballY + this.moveY >
-        (this.canvas.height - this.ballRadius -
-          (this.paddleHeight + this.paddleBottomPadding)) &&
+        (this.paddleY - this.ballRadius) &&
+        this.ballY + this.moveY <
+          this.paddleY - this.ballRadius + this.paddleHeight &&
         this.ballX > this.paddleX &&
         this.ballX < this.paddleX + this.paddleWidth) {
       // this.moveY = -this.moveY;
@@ -320,7 +324,7 @@ class PongsembleClient {
     this.ctx.beginPath();
     this.ctx.rect(this.paddleX, this.paddleY,
         this.paddleWidth, this.paddleHeight);
-    this.ctx.fillStyle = '#0095DD';
+    this.ctx.fillStyle = this.paddleColor;
     this.ctx.fill();
     this.ctx.closePath();
   }
@@ -379,7 +383,7 @@ class PongsembleClient {
 
       if (this.ballX > leftEdge && this.ballX < rightEdge &&
         this.ballY > topEdge && this.ballY < bottomEdge ) {
-        console.log('collision');
+        console.debug('collision');
         if (this.blocksHit[i] == 0) {
           this.moveY = -this.moveY;
           this.blockHit(i);
@@ -393,7 +397,7 @@ class PongsembleClient {
    * @param {int} block
    */
   blockHit(block) {
-    console.log('You hit block ', block);
+    console.debug('You hit block ', block);
     this.flashBlock(block);
   }
 
@@ -447,7 +451,20 @@ class PongsembleClient {
    * @param {Event} e
    */
   touchstartHandler(e) {
+    console.debug(`touch start ${e}`);
+    e.preventDefault();
+    if (this.ballStopped) {
+      this.ballStopped = false;
+    }
 
+    if (e.touches[0].clientX > this.paddleCenter) {
+      this.rightPressed = true;
+    } else if (e.touches[0].clientX < this.paddleCenter) {
+      this.leftPressed = true;
+    } else {
+      this.rightPressed = false;
+      this.leftPressed = false;
+    }
   }
 
   /**
@@ -455,7 +472,9 @@ class PongsembleClient {
    * @param {Event} e
    */
   touchendHandler(e) {
-
+    console.debug('touch end');
+    this.rightPressed = false;
+    this.leftPressed = false;
   }
 
   /**
@@ -463,7 +482,16 @@ class PongsembleClient {
    * @param {Event} e
    */
   touchmoveHandler(e) {
-
+    console.debug(`touch move ${e.touches[0]}`);
+    e.preventDefault();
+    // if (e.touches[0].clientX > this.paddleCenter) {
+    //   this.rightPressed = true;
+    // } else if (e.touches[0].clientX < this.paddleCenter) {
+    //   this.leftPressed = true;
+    // } else {
+    //   this.rightPressed = false;
+    //   this.leftPressed = false;
+    // }
   }
 
   /**
@@ -471,10 +499,12 @@ class PongsembleClient {
    * @param {Event} e
    */
   touchcancelHandler(e) {
-
+    console.debug('touch cancel');
+    this.rightPressed = false;
+    this.leftPressed = false;
   }
-} // End of PonsembleClient Class
+} // End of BandyClient Class
 
 window.onload = () => {
-  window.app = new PongsembleClient();
+  window.app = new BandyClient();
 };

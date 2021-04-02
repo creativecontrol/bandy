@@ -2,13 +2,71 @@
   html, body { height: 100%; }
   html,
   body {
-    background-color: darkslategrey;
+    background-color: #333333;
+    font-family: 'Comfortaa', 'cursive';
     height: 100%;
     margin: 0;
     overflow: hidden;
     width: 100%;
   }
 
+.header {
+  align-items: center;
+  display: flex;
+  font-family: 'Comfortaa', 'cursive';
+  height: 60px;
+  justify-content: center;
+}
+
+.header #title {
+  color: #ddd;
+  font-size: 50px;
+  font-weight: 700;
+}
+
+.bubble {
+  width: 100px;
+  margin: 10px auto;
+  border-radius: 15px;
+  background: #0095DD;
+  color: #fff;
+  padding: 5px;
+  text-align: center;
+  font-weight: 700;
+  position: relative;
+}
+
+
+/* speech bubble 13 */
+
+/* .header #liveState:after {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 15px solid #00bfb6;
+  border-right: 15px solid transparent;
+  border-top: 15px solid #00bfb6;
+  border-bottom: 15px solid transparent;
+  right: -16px;
+  top: 0px;
+} */
+
+
+/* speech bubble 14 */
+
+/* .header #playerCount:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 15px solid transparent;
+  border-right: 15px solid #00bfb6;
+  border-top: 15px solid #00bfb6;
+  border-bottom: 15px solid transparent;
+  left: -16px;
+  top: 0px;
+} */
 
 canvas {
     /* position: absolute; */
@@ -18,3 +76,4 @@ canvas {
   .controls {
     display: none;
   }
+

@@ -1,16 +1,24 @@
 {
-  "name": "pongsemble",
+  "name": "bandy",
   "version": "1.0.0",
   "description": "*pongsemble* is a multi-user interface for capturing and aggregating user button clicks and plugging them into piano Genie for control of MIDI musical instruments.",
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "eslint": "^7.22.0",
+    "eslint": "^7.23.0",
     "eslint-config-google": "^0.14.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Thadeus Frazier-Reed",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativecontrol/bandy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/creativecontrol/bandy/issues"
+  },
+  "homepage": "https://github.com/creativecontrol/bandy#readme"
 }

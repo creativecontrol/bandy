@@ -1,28 +1,28 @@
 /**
- * 
+ *
  */
 
 const MAPPING_8 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7};
-const MAPPING_4 = {0: 0, 1: 2, 2: 5, 3: 7};
-const BUTTONS_DEVICE = ['a','s','d','f','j','k','l',';'];
+// const MAPPING_4 = {0: 0, 1: 2, 2: 5, 3: 7};
+const BUTTONS_DEVICE = ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'];
 
 let OCTAVES = 7;
-let NUM_BUTTONS = 8;
-let BUTTON_MAPPING = MAPPING_8;
+// let NUM_BUTTONS = 8;
+const BUTTON_MAPPING = MAPPING_8;
 
 /**
- * 
+ *
  */
-class PongsembleController {
+class BandyController {
   /**
    *
    */
   constructor() {
-    this.activateMidiAction = document.getElementById("activateMidi");
-    this.midiInitButton = document.getElementById("midiInactive");
-    this.midiUI = document.getElementById("midiActive");
-    this.inputMenu = document.getElementById("midiInSelect");
-    this.outputMenu = document.getElementById("midiOutSelect");
+    this.activateMidiAction = document.getElementById('activateMidi');
+    this.midiInitButton = document.getElementById('midiInactive');
+    this.midiUI = document.getElementById('midiActive');
+    this.inputMenu = document.getElementById('midiInSelect');
+    this.outputMenu = document.getElementById('midiOutSelect');
     this.currentInput = null;
     this.curretOutput = null;
 
@@ -34,6 +34,8 @@ class PongsembleController {
     // Which notes the pedal is sustaining.
     this.sustaining = false;
     this.sustainingNotes = [];
+
+    this.room = 'LiveRoom';
 
     this.player = new Player();
     this.genie = new mm.PianoGenie(CONSTANTS.GENIE_CHECKPOINT);
@@ -50,9 +52,9 @@ class PongsembleController {
           });
         })
         .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-        // ...
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(`${errorCode} ${errorMessage}`);
         });
   }
 
@@ -77,21 +79,22 @@ class PongsembleController {
     window.addEventListener('resize', this.onWindowResize.bind(this));
     window.addEventListener('orientationchange',
         this.onWindowResize.bind(this));
-    // window.addEventListener('hashchange', () => TEMPERATURE = this.getTemperature());
+    // window.addEventListener('hashchange',
+    //   () => TEMPERATURE = this.getTemperature());
   }
 
   /**
-   * 
+   *
    */
   connectToDatabase() {
     this.database = firebase.database();
 
-    const settings = firebase.database().ref('settings/');
+    const settings = firebase.database().ref(`${this.room}/settings/`);
     settings.on('value', (snapshot) => {
       this.applySettings(snapshot.val);
-    })
+    });
 
-    const players = firebase.database().ref('players/');
+    const players = firebase.database().ref(`${this.room}/players/`);
     players.on('value', (snapshot) => {
       const playerStates = snapshot.val();
       this.applyPlayerStates(playerStates);
@@ -99,18 +102,21 @@ class PongsembleController {
   }
 
   /**
-   * 
+   *
    * @param {*} settings
    */
   applySettings(settings) {
-    this.ballSpeed =
+    this.ballSpeed = settings['ballStartSpeed'];
+    this.isLive = settings['isLive'];
+    this.numberOfPlayers = settings['numberOfPlayers'];
   }
 
   /**
-   * 
+   *
+   * @param {*} playerStates
    */
   applyPlayerStates(playerStates) {
-    // parse through each of the players 
+    // parse through each of the players
     // if any button changes to 1 change it to 1
     // if all players' button X changes to 0 change to zero
     _.forEach(playerStates, (player, playerId) => {
@@ -131,9 +137,8 @@ class PongsembleController {
 
   /**
    *
-   * @param {*} button 
-   * @param {*} fromKeyDown 
-   * @returns 
+   * @param {*} button
+   * @param {*} fromKeyDown
    */
   buttonDown(button, fromKeyDown) {
     // If we're already holding this button down, nothing new to do.
@@ -168,9 +173,8 @@ class PongsembleController {
   }
 
   /**
-   * 
-   * @param {*} button 
-   * @returns 
+   *
+   * @param {*} button
    */
   buttonUp(button) {
     const el = document.getElementById(`btn${button}`);
@@ -212,7 +216,8 @@ class PongsembleController {
       OCTAVES + (bonusNotes - 1);
     this.keyWhitelist = Array(totalNotes).fill().map((x, i) => {
       if (OCTAVES > 6) return i;
-      // Starting 3 semitones up on small screens (on a C), and a whole octave up.
+      // Starting 3 semitones up on small screens (on a C),
+      // and a whole octave up.
       return i + 3 + CONSTANTS.NOTES_PER_OCTAVE;
     });
 
@@ -222,8 +227,8 @@ class PongsembleController {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @return {float} newTemp
    */
   getTemperature() {
     const hash = parseFloat(this.parseHashParameters()['temperature']) || 0.25;
@@ -233,8 +238,8 @@ class PongsembleController {
   }
 
   /**
-   * 
-   * @returns 
+   *
+   * @return {*} params
    */
   parseHashParameters() {
     const hash = window.location.hash.substring(1);
@@ -259,5 +264,5 @@ class PongsembleController {
 }
 
 window.onload = () => {
-  window.app = new PongsembleController();
+  window.app = new BandyController();
 };

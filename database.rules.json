@@ -1,6 +1,6 @@
 {
   "rules": {
-    "players": {
+    "LiveRoom": {
     	".read": true,
     	".write": true
     }
