@@ -28,6 +28,8 @@ class BandyClient {
     this.headerSize = 60;
     this.setCanvasSize();
 
+    this.playerCount = document.querySelector('#playerCount');
+
     this.drawInterval = 10;
 
     this.ON = 1;
@@ -43,6 +45,10 @@ class BandyClient {
     this.refreshTime = 700;
 
     this.ballSpeed = 3;
+    this.numberOfPlayers;
+    this.isLive;
+    this.eventURL;
+    this.projectWebsite;
 
     this.moveX = this.ballSpeed;
     // Start at a random angle
@@ -114,9 +120,9 @@ class BandyClient {
   connectToDatabase() {
     this.database = firebase.database();
 
-    const settings = firebase.database().ref('settings/');
+    const settings = firebase.database().ref(`${this.room}/settings/`);
     settings.on('value', (snapshot) => {
-      this.applySettings(snapshot.val);
+      this.applySettingsFromDatabase(snapshot.val());
     });
   }
 
@@ -124,10 +130,15 @@ class BandyClient {
    *
    * @param {*} settings
    */
-  applySettings(settings) {
+  applySettingsFromDatabase(settings) {
+    console.log(`applying Settings`);
     this.ballSpeed = settings['ballStartSpeed'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.isLive = settings['isLive'];
+    this.eventURL = settings['eventURL'];
+    this.projectWebsite = settings['projectWebsite'];
+
+    this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
   }
 
   /**
@@ -136,7 +147,7 @@ class BandyClient {
   createNewPlayerEntry() {
     const playersRef = this.database.ref(`${this.room}/players/`);
     this.playerId = playersRef.push();
-    console.log(this.playerId);
+    console.debug(`Player ID: ${this.playerId}`);
     this.playerId.set({
       '0': this.OFF,
       '1': this.OFF,

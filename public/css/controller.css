@@ -246,6 +246,10 @@ button.splash-button.small {
   background: #1C2C42;
 }
 
+.dialog .settingParam {
+  padding: 8px;
+}
+
 /***********************
  * Radio buttons
  ***********************/

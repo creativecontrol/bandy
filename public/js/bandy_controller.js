@@ -26,6 +26,17 @@ class BandyController {
     this.currentInput = null;
     this.curretOutput = null;
 
+    this.settingsModal = document.querySelector('#settingsBox');
+    this.settingsAction = document.querySelector('#btnSettings');
+    this.ballSpeedSetting = document.querySelector('#ballSpeed');
+    this.eventURLSetting = document.querySelector('#eventURL');
+    this.roomIsLiveSetting = document.querySelector('#isLive');
+    this.updateSettingsAction = document.querySelector('#applySettings');
+
+    this.eventURL = '';
+    this.ballSpeed;
+    this.isLive;
+
     this.keyWhitelist;
     this.TEMPERATURE = this.getTemperature();
 
@@ -38,6 +49,7 @@ class BandyController {
     this.room = 'LiveRoom';
 
     this.player = new Player();
+    this.currentNumberOfPlayers = 0;
     this.genie = new mm.PianoGenie(CONSTANTS.GENIE_CHECKPOINT);
     this.painter = new FloatyNotes();
     this.piano = new Piano();
@@ -46,6 +58,7 @@ class BandyController {
     firebase.auth().signInAnonymously()
         .then(() => {
           this.connectToDatabase();
+          this.copySettingsToUI();
           this.genie.initialize().then(() => {
             console.log('🧞‍♀️ ready!');
             this.run();
@@ -76,6 +89,24 @@ class BandyController {
     window.requestAnimationFrame(() => this.painter.drawLoop());
 
     // Event listeners.
+
+    this.ballSpeedSetting.onchange = () => {
+      this.ballSpeed = this.ballSpeedSetting.value;
+    };
+    this.eventURLSetting.onchange = () => {
+      this.eventURL = this.eventURLSetting.value;
+    };
+    this.roomIsLiveSetting.onchange = () => {
+      this.isLive = this.roomIsLiveSetting.checked;
+    };
+    this.updateSettingsAction.onclick = () => {
+      this.updateSettings();
+    };
+    this.settingsAction.onclick = () => {
+      console.debug('settings button clicked');
+      this.settingsModal.hidden = !this.settingsModal.hidden;
+    };
+
     window.addEventListener('resize', this.onWindowResize.bind(this));
     window.addEventListener('orientationchange',
         this.onWindowResize.bind(this));
@@ -91,7 +122,7 @@ class BandyController {
 
     const settings = firebase.database().ref(`${this.room}/settings/`);
     settings.on('value', (snapshot) => {
-      this.applySettings(snapshot.val);
+      this.applySettingsFromDatabase(snapshot.val());
     });
 
     const players = firebase.database().ref(`${this.room}/players/`);
@@ -105,10 +136,22 @@ class BandyController {
    *
    * @param {*} settings
    */
-  applySettings(settings) {
+  applySettingsFromDatabase(settings) {
     this.ballSpeed = settings['ballStartSpeed'];
     this.isLive = settings['isLive'];
     this.numberOfPlayers = settings['numberOfPlayers'];
+    this.eventURL = settings['eventURL'];
+
+    this.copySettingsToUI();
+  }
+
+  /**
+   *
+   */
+  copySettingsToUI() {
+    this.ballSpeedSetting.value = this.ballSpeed;
+    this.roomIsLiveSetting.checked = this.isLive;
+    this.eventURLSetting.value = this.eventURL;
   }
 
   /**
@@ -119,6 +162,7 @@ class BandyController {
     // parse through each of the players
     // if any button changes to 1 change it to 1
     // if all players' button X changes to 0 change to zero
+
     _.forEach(playerStates, (player, playerId) => {
       if (playerId != 'schema') {
         console.log(`${playerId} ${player}`);
@@ -133,6 +177,41 @@ class BandyController {
         });
       }
     });
+
+    // The player schema lives in the players array so subtract 1
+    const numberOfPlayers = _.size(playerStates) - 1;
+    if (numberOfPlayers != this.currentNumberOfPlayers) {
+      this.updateNumberOfPlayers(numberOfPlayers);
+    }
+  }
+
+  /**
+   *
+   * @param {*} numberOfPlayers
+   */
+  updateNumberOfPlayers(numberOfPlayers) {
+    const settings = this.database.ref(`${this.room}/settings/`);
+
+    settings.update(
+        {
+          'numberOfPlayers': numberOfPlayers,
+        },
+    );
+  }
+
+  /**
+   *
+   */
+  updateSettings() {
+    const settings = this.database.ref(`${this.room}/settings/`);
+
+    settings.update(
+        {
+          'ballStartSpeed': this.ballSpeed,
+          'eventURL': this.eventURL,
+          'isLive': this.isLive,
+        },
+    );
   }
 
   /**
