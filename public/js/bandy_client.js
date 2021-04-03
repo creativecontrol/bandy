@@ -95,6 +95,7 @@ class BandyClient {
     this.database = null;
     this.room = 'LiveRoom';
     this.playerId = null;
+    this.playerRef;
     // Attach to firebase database
     firebase.auth().signInAnonymously()
         .then(() => {
@@ -147,7 +148,7 @@ class BandyClient {
   createNewPlayerEntry() {
     const playersRef = this.database.ref(`${this.room}/players/`);
     this.playerId = playersRef.push();
-    console.debug(`Player ID: ${this.playerId}`);
+    console.log(`Player ID: ${this.playerId}`);
     this.playerId.set({
       '0': this.OFF,
       '1': this.OFF,
@@ -158,6 +159,8 @@ class BandyClient {
       '6': this.OFF,
       '7': this.OFF,
     });
+
+    this.playerId.onDisconnect().remove();
   }
 
   /**
@@ -173,7 +176,10 @@ class BandyClient {
   run() {
     console.log('starting run');
     window.addEventListener('resize', this.resizeCanvas.bind(this));
-    window.addEventListener('beforeunload', this.removePlayerEntry.bind(this));
+    // window.onunload = window.onbeforeunload = () => {
+    //   this.removePlayerEntry();
+    // };
+    // window.addEventListener('unload', this.removePlayerEntry.bind(this), false);
 
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
     document.addEventListener('keyup', this.keyUpHandler.bind(this), false);

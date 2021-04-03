@@ -18,21 +18,31 @@
   justify-content: center;
 }
 
-.header #title {
-  color: #ddd;
-  font-size: 50px;
-  font-weight: 700;
+@media screen and (max-width: 525px) {
+  .header #title {
+    color: #ddd;
+    font-size: 10vw;
+    font-weight: 700;
+  }
+}
+
+@media screen and (min-width: 526px) {
+  .header #title {
+    color: #ddd;
+    font-size: 50px;
+    font-weight: 700;
+  }
 }
 
 .bubble {
-  width: 100px;
+  width: 20%;
   margin: 10px auto;
   border-radius: 15px;
   background: #0095DD;
   color: #fff;
   padding: 5px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 500;
   position: relative;
 }
 
