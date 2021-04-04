@@ -178,8 +178,7 @@ class BandyController {
       }
     });
 
-    // The player schema lives in the players array so subtract 1
-    const numberOfPlayers = _.size(playerStates) - 1;
+    const numberOfPlayers = _.size(playerStates);
     if (numberOfPlayers != this.currentNumberOfPlayers) {
       this.updateNumberOfPlayers(numberOfPlayers);
     }
