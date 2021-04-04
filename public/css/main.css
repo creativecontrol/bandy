@@ -20,7 +20,7 @@
 
 @media screen and (max-width: 525px) {
   .header #title {
-    color: #ddd;
+    color: #ebebeb;
     font-size: 10vw;
     font-weight: 700;
   }
@@ -28,7 +28,7 @@
 
 @media screen and (min-width: 526px) {
   .header #title {
-    color: #ddd;
+    color: #ebebeb;
     font-size: 50px;
     font-weight: 700;
   }
@@ -38,8 +38,8 @@
   width: 20%;
   margin: 10px auto;
   border-radius: 15px;
-  background: #0095DD;
-  color: #fff;
+  background: #C77C7C;
+  color: #ebebeb;
   padding: 5px;
   text-align: center;
   font-weight: 500;

@@ -5,8 +5,8 @@ body {
   text-align: center;
   overflow: hidden;
   width: 100vw;
-  background: #141E30;
-  background: linear-gradient(to bottom, #243B55, #141E30);
+  background: #333333;
+  background: #333333;
   color: white;
   font-family: 'Comfortaa', cursive;
   display: flex;
