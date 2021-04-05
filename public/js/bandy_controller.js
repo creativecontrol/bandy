@@ -336,7 +336,8 @@ class BandyController {
     const btns = document.querySelectorAll('.controls button.color');
     for (let i = 0; i < btns.length; i++) {
       btns[i].innerHTML =
-          `<span>${i + 1}</span><br><span>${BUTTONS_DEVICE[i]}</span>`;
+          `<span>${i + 1}</span>`;
+      // `<span>${i + 1}</span><br><span>${BUTTONS_DEVICE[i]}</span>`;
     }
   }
 }

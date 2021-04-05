@@ -6,7 +6,6 @@ body {
   overflow: hidden;
   width: 100vw;
   background: #333333;
-  background: #333333;
   color: white;
   font-family: 'Comfortaa', cursive;
   display: flex;
@@ -32,8 +31,8 @@ body {
 .background {
   width: 100vw;
   height: 100vh; 
-  background: #141E30;
-  background: linear-gradient(to bottom, #243B55, #141E30);
+  background: #333333;
+  /* background: linear-gradient(to bottom, #243B55, #141E30); */
 }
 
 .color-0 { background: #EE2B29; fill: #EE2B29; } 
@@ -213,7 +212,7 @@ button.splash-button.small {
 
 .dialog {
   font-weight: 100;
-  background: #1C2C42;
+  background: #333333;
   color: white;
   padding: 24px;
   z-index: 10;
@@ -243,7 +242,7 @@ button.splash-button.small {
 }
 
 .dialog select option {
-  background: #1C2C42;
+  background: #333333;
 }
 
 .dialog .settingParam {
