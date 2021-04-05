@@ -46,37 +46,9 @@
   position: relative;
 }
 
-
-/* speech bubble 13 */
-
-/* .header #liveState:after {
-  content: "";
-  width: 0px;
-  height: 0px;
-  position: absolute;
-  border-left: 15px solid #00bfb6;
-  border-right: 15px solid transparent;
-  border-top: 15px solid #00bfb6;
-  border-bottom: 15px solid transparent;
-  right: -16px;
-  top: 0px;
-} */
-
-
-/* speech bubble 14 */
-
-/* .header #playerCount:before {
-  content: "";
-  width: 0px;
-  height: 0px;
-  position: absolute;
-  border-left: 15px solid transparent;
-  border-right: 15px solid #00bfb6;
-  border-top: 15px solid #00bfb6;
-  border-bottom: 15px solid transparent;
-  left: -16px;
-  top: 0px;
-} */
+#liveState {
+  visibility: hidden;
+}
 
 canvas {
     /* position: absolute; */

@@ -15,7 +15,7 @@
  *
  * TODO:
  *  - Create a splashscreen
- *  - Add touch controls; touch once for first fire, scroll for paddle
+ *
  */
 class BandyClient {
   /**
@@ -29,6 +29,7 @@ class BandyClient {
     this.setCanvasSize();
 
     this.playerCount = document.querySelector('#playerCount');
+    this.liveState = document.querySelector('#liveState');
 
     this.drawInterval = 10;
 
@@ -141,6 +142,12 @@ class BandyClient {
     this.projectWebsite = settings['projectWebsite'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
+
+    if (this.isLive) {
+      this.liveState.style.visibility = 'visible';
+    } else {
+      this.liveState.style.visibility = 'hidden';
+    }
   }
 
   /**
