@@ -1,5 +1,6 @@
 /**
- *
+ * TODO:
+ * - Add MI
  */
 
 const MAPPING_8 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7};
@@ -9,6 +10,13 @@ const BUTTONS_DEVICE = ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'];
 let OCTAVES = 7;
 // let NUM_BUTTONS = 8;
 const BUTTON_MAPPING = MAPPING_8;
+
+console.debugging = false;
+
+console.debug = (...args) => {
+  if (!console.debugging) return;
+  console.log.apply(this, args);
+};
 
 /**
  *
@@ -125,6 +133,10 @@ class BandyController {
       this.applySettingsFromDatabase(snapshot.val());
     });
 
+    settings.onDisconnect().update({
+      isLive: false,
+    });
+
     const players = firebase.database().ref(`${this.room}/players/`);
     players.on('value', (snapshot) => {
       const playerStates = snapshot.val();
@@ -165,13 +177,13 @@ class BandyController {
 
     _.forEach(playerStates, (player, playerId) => {
       if (playerId != 'schema') {
-        console.log(`${playerId} ${player}`);
+        console.debug(`${playerId} ${player}`);
         _.forEach(player, (note, key) => {
           if (note == 1) {
-            console.log(`note ${key} on`);
+            console.debug(`note ${key} on`);
             this.buttonDown(parseInt(key));
           } else if (note == 0) {
-            console.log(`note ${key} off`);
+            console.debug(`note ${key} off`);
             this.buttonUp(parseInt(key));
           }
         });
