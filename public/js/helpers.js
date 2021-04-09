@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const CONSTANTS = {
   COLORS: ['#EE2B29', '#ff9800', '#ffff00', '#c6ff00', '#00e5ff',
     '#2979ff', '#651fff', '#d500f9'],
@@ -140,7 +141,6 @@ class Player {
   /**
    *
    * @param {*} msg
-   * @returns
    */
   getMIDIMessage(msg) {
     if (!this.usingMidiIn) {
@@ -168,6 +168,7 @@ class Player {
 class FloatyNotes {
   /**
    *
+   * @param {*} headerSize
    */
   constructor(headerSize = 0) {
     this.notes = []; // the notes floating on the screen.
@@ -196,7 +197,7 @@ class FloatyNotes {
    * @param {*} button
    * @param {*} x
    * @param {*} width
-   * @returns
+   * @return {*} noteToPaint
    */
   addNote(button, x, width) {
     const noteToPaint = {
@@ -306,7 +307,8 @@ class Piano {
       index = 3;
       x = 2 * this.config.whiteNoteWidth;
     } else {
-      // Starting 3 semitones up on small screens (on a C), and a whole octave up.
+      // Starting 3 semitones up on small screens (on a C)
+      // , and a whole octave up.
       index = 3 + CONSTANTS.NOTES_PER_OCTAVE;
     }
 
@@ -334,7 +336,8 @@ class Piano {
       index = 3;
       x = this.config.whiteNoteWidth;
     } else {
-      // Starting 3 semitones up on small screens (on a C), and a whole octave up.
+      // Starting 3 semitones up on small screens (on a C)
+      // , and a whole octave up.
       index = 3 + CONSTANTS.NOTES_PER_OCTAVE;
       x = -this.config.whiteNoteWidth;
     }
@@ -358,7 +361,7 @@ class Piano {
    *
    * @param {*} note
    * @param {*} button
-   * @returns
+   * @return {*} rect
    */
   highlightNote(note, button) {
     // Show the note on the piano roll.
@@ -390,7 +393,7 @@ class Piano {
    * @param {*} h
    * @param {*} fill
    * @param {*} stroke
-   * @returns
+   * @return {*} rect
    */
   makeRect(index, x, y, w, h, fill, stroke) {
     const rect = document.createElementNS(this.svgNS, 'rect');

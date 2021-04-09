@@ -1,11 +1,11 @@
 /**
  * TODO:
- * - Add MI
+ *
  */
 
 const MAPPING_8 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7};
 // const MAPPING_4 = {0: 0, 1: 2, 2: 5, 3: 7};
-const BUTTONS_DEVICE = ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'];
+// const BUTTONS_DEVICE = ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'];
 
 let OCTAVES = 7;
 // let NUM_BUTTONS = 8;
