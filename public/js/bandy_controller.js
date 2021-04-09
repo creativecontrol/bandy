@@ -42,6 +42,7 @@ class BandyController {
     this.updateSettingsAction = document.querySelector('#applySettings');
 
     this.liveState = document.querySelector('#liveState');
+    this.playerCount = document.querySelector('#playerCount');
 
     this.headerSize = 60;
 
@@ -157,6 +158,8 @@ class BandyController {
     this.isLive = settings['isLive'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.eventURL = settings['eventURL'];
+
+    this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
 
     if (this.isLive) {
       this.liveState.innerText = 'Band Live';

@@ -23,6 +23,7 @@ class Player {
     this.usingMidiOut = true;
     this.usingMidiIn = false;
     this.selectOutElement = document.getElementById('selectOut');
+    this.selectedOut = {};
     this.selectInElement = document.getElementById('selectIn');
     this.loadAllSamples();
   }
@@ -74,7 +75,12 @@ class Player {
   midiReady(midi) {
     // Also react to device changes.
     midi.addEventListener('statechange',
-        (event) => this.initDevices(event.target));
+        (event) => {
+          this.initDevices(event.target);
+          if (this.selectedOut.name) {
+            this.selectOutElement.value = this.selectedOut.name;
+          }
+        });
     this.initDevices(midi);
   }
 
@@ -84,8 +90,6 @@ class Player {
    */
   initDevices(midi) {
     this.midiOut = [];
-    this.midiIn = [];
-
 
     const outputs = midi.outputs.values();
     for (let output = outputs.next(); output && !output.done;
@@ -93,23 +97,16 @@ class Player {
       this.midiOut.push(output.value);
     }
 
-    const inputs = midi.inputs.values();
-    for (let input = inputs.next(); input &&!input.done;
-      input = inputs.next()) {
-      this.midiIn.push(input.value);
-      // TODO: should probably use the selected index from
-      // this.selectInElement for correctness
-      // but i'm hacking this together for a demo so...
-      input.value.onmidimessage = (msg) => this.getMIDIMessage(msg);
-    }
-
-    // No MIDI, no settings.
-    // btnSettings.hidden = (this.midiOut.length === 0 &&
-    // this.midiIn.length === 0);
-    // this.selectInElement.innerHTML = this.midiIn.map((device) =>
-    //   `<option>${device.name}</option>`).join('');
     this.selectOutElement.innerHTML = this.midiOut.map((device) =>
       `<option>${device.name}</option>`).join('');
+
+    this.selectOutElement.onchange = () => {
+      this.selectedOut.index = this.selectOutElement.selectedIndex;
+      this.selectedOut.name =
+        this.selectOutElement[this.selectedOut.index].value;
+      // console.log(`selected Out: ${this.selectedOut.index}
+      //   ${this.selectedOut.name}`);
+    };
   }
 
   /**
@@ -122,7 +119,7 @@ class Player {
     if (button === -1) button = 0;
     // const msg = [0x90 + button, pitch, 0x7f];    // note on, full velocity.
     const msg = [0x90, pitch, 0x7f]; // note on, full velocity.
-    this.midiOut[this.selectOutElement.selectedIndex].send(msg);
+    this.midiOut[this.selectedOut.index].send(msg);
   }
 
   /**
@@ -136,7 +133,7 @@ class Player {
     // const msg = [0x80 + button, pitch, 0x7f];
     // note on, middle C, full velocity.
     const msg = [0x80, pitch, 0x7f]; // note on, middle C, full velocity.
-    this.midiOut[this.selectOutElement.selectedIndex].send(msg);
+    this.midiOut[this.selectedOut.index].send(msg);
   }
 
   /**
