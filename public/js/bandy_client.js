@@ -144,9 +144,9 @@ class BandyClient {
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
 
     if (this.isLive) {
-      this.liveState.style.visibility = 'visible';
+      this.liveState.innerText = 'Band Live';
     } else {
-      this.liveState.style.visibility = 'hidden';
+      this.liveState.style.visibility = 'Band Offline';
     }
   }
 

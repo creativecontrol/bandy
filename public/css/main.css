@@ -16,6 +16,7 @@
   font-family: 'Comfortaa', 'cursive';
   height: 60px;
   justify-content: center;
+  width: 100%;
 }
 
 @media screen and (max-width: 525px) {
@@ -24,6 +25,11 @@
     font-size: 10vw;
     font-weight: 700;
   }
+
+  .bubble {
+    font-size: 3.5vw;
+    font-weight: 5;
+  }
 }
 
 @media screen and (min-width: 526px) {
@@ -31,6 +37,11 @@
     color: #ebebeb;
     font-size: 50px;
     font-weight: 700;
+  }
+
+  .bubble {
+    font-size: 2.5vw;
+    font-weight: 5;
   }
 }
 
@@ -42,12 +53,10 @@
   color: #ebebeb;
   padding: 5px;
   text-align: center;
-  font-weight: 500;
   position: relative;
 }
 
 #liveState {
-  visibility: hidden;
 }
 
 canvas {

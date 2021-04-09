@@ -45,7 +45,7 @@ class Player {
    */
   playNoteDown(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
-    if (this.usingMidiOut) {
+    if (this.usingMidiOut && this.midiOut) {
       this.sendMidiNoteOn(pitch, button);
     } else {
       mm.Player.tone.context.resume();
@@ -60,7 +60,7 @@ class Player {
    */
   playNoteUp(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
-    if (this.usingMidiOut) {
+    if (this.usingMidiOut && this.midiOut) {
       this.sendMidiNoteOff(pitch, button);
     } else {
       this.player.playNoteUp({pitch: pitch});
@@ -97,7 +97,7 @@ class Player {
     for (let input = inputs.next(); input &&!input.done;
       input = inputs.next()) {
       this.midiIn.push(input.value);
-      // TODO: should probably use the selected index from 
+      // TODO: should probably use the selected index from
       // this.selectInElement for correctness
       // but i'm hacking this together for a demo so...
       input.value.onmidimessage = (msg) => this.getMIDIMessage(msg);
@@ -171,13 +171,14 @@ class FloatyNotes {
   /**
    *
    */
-  constructor() {
+  constructor(headerSize = 0) {
     this.notes = []; // the notes floating on the screen.
 
     this.canvas = document.getElementById('canvas');
     this.context = this.canvas.getContext('2d');
     this.context.lineWidth = 4;
     this.context.lineCap = 'round';
+    this.headerSize = headerSize;
 
     this.contextHeight = 0;
   }
@@ -189,15 +190,15 @@ class FloatyNotes {
   resize(whiteNoteHeight) {
     this.canvas.width = window.innerWidth;
     this.canvas.height = this.contextHeight =
-      window.innerHeight - whiteNoteHeight - 20;
+      window.innerHeight - whiteNoteHeight - 20 - this.headerSize;
   }
 
   /**
    *
-   * @param {*} button 
-   * @param {*} x 
-   * @param {*} width 
-   * @returns 
+   * @param {*} button
+   * @param {*} x
+   * @param {*} width
+   * @returns
    */
   addNote(button, x, width) {
     const noteToPaint = {
@@ -383,15 +384,15 @@ class Piano {
   }
 
   /**
-   * 
-   * @param {*} index 
-   * @param {*} x 
-   * @param {*} y 
-   * @param {*} w 
-   * @param {*} h 
-   * @param {*} fill 
-   * @param {*} stroke 
-   * @returns 
+   *
+   * @param {*} index
+   * @param {*} x
+   * @param {*} y
+   * @param {*} w
+   * @param {*} h
+   * @param {*} fill
+   * @param {*} stroke
+   * @returns
    */
   makeRect(index, x, y, w, h, fill, stroke) {
     const rect = document.createElementNS(this.svgNS, 'rect');

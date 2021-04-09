@@ -46,7 +46,7 @@ body {
 
 canvas {
   position: absolute;
-  top: 70px;
+  top: 130px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -54,7 +54,7 @@ canvas {
 
 #svg {
   position: absolute;
-  top: 0;
+  top: 60px;
   left: 0;
 }
 
@@ -68,10 +68,10 @@ h1 {
 }
 
 .splash a:link, a:visited {
-  color: #CDF352;
+  color: ##C77C7C;
 }
 .splash-main b {
-  background: #CDF352;
+  background: ##C77C7C;
   color: black;
   padding: 0 4px;
 }
@@ -119,7 +119,7 @@ h1 {
 }
 
 .controls button.settings:hover {
-  fill: #CDF352;
+  fill: ##C77C7C;
 }
 
 .controls button span {
@@ -183,18 +183,18 @@ button.splash-button {
   font-family: inherit;
   font-size: 22px;
   display: block;
-  border: 2px solid #CDF352;
+  border: 2px solid #C77C7C;
   background-color: transparent;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #CDF352;
+  color: #C77C7C;
   text-align: center;
   transition: background-color 0.2s linear;
   width: 200px;
 }
 
 button.splash-button:hover {
-  background-color: #CDF352;
+  background-color: #C77C7C;
   color: black;
 }
 
@@ -222,9 +222,9 @@ button.splash-button.small {
   width: 80%;
   max-width: 500px;
   transform: translateX(-50%);
-  border: 2px solid #CDF352;
-  -webkit-box-shadow: 8px 8px 0 #CDF352;
-  box-shadow: 8px 8px 0 #CDF352;
+  border: 2px solid #C77C7C;
+  -webkit-box-shadow: 8px 8px 0 #C77C7C;
+  box-shadow: 8px 8px 0 #C77C7C;
   text-align: left;
 }
 
@@ -233,7 +233,7 @@ button.splash-button.small {
   font-family: inherit;
   font-size: 14px;
   border: none;
-  border-bottom: 2px solid #CDF352;
+  border-bottom: 2px solid #C77C7C;
   background: transparent;
   box-shadow: none;
   xmargin-bottom: 6px;
@@ -253,8 +253,8 @@ button.splash-button.small {
  * Radio buttons
  ***********************/
 .control-indicator {
-  border: solid #CDF352 2px;
-  color: #CDF352;
+  border: solid #C77C7C 2px;
+  color: #C77C7C;
   border-radius: 2px;
 }
 label.radio {
@@ -270,7 +270,7 @@ label.radio > input[type="radio"] {
   z-index: -1;
 }
 label.radio >  input:checked ~ .control-indicator {
-  background-color: #CDF352;
+  background-color: #C77C7C;
 }
 label.radio > .control-indicator {
   position: absolute;
@@ -285,3 +285,49 @@ label.radio > .control-indicator {
   user-select: none;
 }
 #inputNumButtons { vertical-align: middle; }
+
+.header {
+  align-items: center;
+  display: flex;
+  font-family: 'Comfortaa', 'cursive';
+  height: 60px;
+  justify-content: center;
+  width: 100%;
+}
+
+@media screen and (max-width: 525px) {
+  .header #title {
+    color: #ebebeb;
+    font-size: 10vw;
+    font-weight: 700;
+  }
+
+  .bubble {
+    font-size: 2vw;
+    font-weight: 5;
+  }
+}
+
+@media screen and (min-width: 526px) {
+  .header #title {
+    color: #ebebeb;
+    font-size: 50px;
+    font-weight: 700;
+  }
+
+  .bubble {
+    font-size: 2vw;
+    font-weight: 10;
+  }
+}
+
+.bubble {
+  width: 20%;
+  margin: 10px auto;
+  border-radius: 15px;
+  background: #C77C7C;
+  color: #ebebeb;
+  padding: 5px;
+  text-align: center;
+  position: relative;
+}

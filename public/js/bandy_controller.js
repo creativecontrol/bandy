@@ -41,6 +41,10 @@ class BandyController {
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#applySettings');
 
+    this.liveState = document.querySelector('#liveState');
+
+    this.headerSize = 60;
+
     this.eventURL = '';
     this.ballSpeed;
     this.isLive;
@@ -59,7 +63,7 @@ class BandyController {
     this.player = new Player();
     this.currentNumberOfPlayers = 0;
     this.genie = new mm.PianoGenie(CONSTANTS.GENIE_CHECKPOINT);
-    this.painter = new FloatyNotes();
+    this.painter = new FloatyNotes(this.headerSize);
     this.piano = new Piano();
 
     // Attach to firebase database
@@ -153,6 +157,12 @@ class BandyController {
     this.isLive = settings['isLive'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.eventURL = settings['eventURL'];
+
+    if (this.isLive) {
+      this.liveState.innerText = 'Band Live';
+    } else {
+      this.liveState.style.visibility = 'Band Offline';
+    }
 
     this.copySettingsToUI();
   }
