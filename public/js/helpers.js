@@ -46,7 +46,7 @@ class Player {
    */
   playNoteDown(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
-    if (this.usingMidiOut && this.midiOut) {
+    if (this.usingMidiOut && this.selectedOut.name) {
       this.sendMidiNoteOn(pitch, button);
     } else {
       mm.Player.tone.context.resume();
@@ -61,7 +61,7 @@ class Player {
    */
   playNoteUp(pitch, button) {
     // Send to MIDI out or play with the Magenta player.
-    if (this.usingMidiOut && this.midiOut) {
+    if (this.usingMidiOut && this.selectedOut.name) {
       this.sendMidiNoteOff(pitch, button);
     } else {
       this.player.playNoteUp({pitch: pitch});
@@ -97,15 +97,16 @@ class Player {
       this.midiOut.push(output.value);
     }
 
-    this.selectOutElement.innerHTML = this.midiOut.map((device) =>
+    this.selectOutElement.innerHTML = '<option><em>None</em></option>' +
+    this.midiOut.map((device) =>
       `<option>${device.name}</option>`).join('');
 
     this.selectOutElement.onchange = () => {
       this.selectedOut.index = this.selectOutElement.selectedIndex;
       this.selectedOut.name =
         this.selectOutElement[this.selectedOut.index].value;
-      // console.log(`selected Out: ${this.selectedOut.index}
-      //   ${this.selectedOut.name}`);
+      console.log(`selected Out: ${this.selectedOut.index}
+        ${this.selectedOut.name}`);
     };
   }
 
@@ -119,7 +120,7 @@ class Player {
     if (button === -1) button = 0;
     // const msg = [0x90 + button, pitch, 0x7f];    // note on, full velocity.
     const msg = [0x90, pitch, 0x7f]; // note on, full velocity.
-    this.midiOut[this.selectedOut.index].send(msg);
+    this.midiOut[this.selectedOut.index-1].send(msg);
   }
 
   /**
@@ -133,7 +134,7 @@ class Player {
     // const msg = [0x80 + button, pitch, 0x7f];
     // note on, middle C, full velocity.
     const msg = [0x80, pitch, 0x7f]; // note on, middle C, full velocity.
-    this.midiOut[this.selectedOut.index].send(msg);
+    this.midiOut[this.selectedOut.index-1].send(msg);
   }
 
   /**

@@ -40,6 +40,7 @@ class BandyController {
     this.eventURLSetting = document.querySelector('#eventURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#applySettings');
+    this.clearPlayersAction = document.querySelector('#clearPlayers');
 
     this.liveState = document.querySelector('#liveState');
     this.playerCount = document.querySelector('#playerCount');
@@ -111,6 +112,9 @@ class BandyController {
     };
     this.roomIsLiveSetting.onchange = () => {
       this.isLive = this.roomIsLiveSetting.checked;
+    };
+    this.clearPlayersAction.onclick = () => {
+      this.clearPlayers();
     };
     this.updateSettingsAction.onclick = () => {
       this.updateSettings();
@@ -221,6 +225,20 @@ class BandyController {
           'numberOfPlayers': numberOfPlayers,
         },
     );
+  }
+
+  /**
+   *
+   */
+  clearPlayers() {
+    const players = this.database.ref(`${this.room}/players/`);
+    const result =
+      confirm('Are you sure you want to remove all players from the database?');
+    if (result) {
+      players.remove();
+      this.updateNumberOfPlayers(0);
+    } else {
+    }
   }
 
   /**

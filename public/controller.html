@@ -32,7 +32,7 @@
 <body>
   <div class="header">
     <div class= "bubble" id="playerCount">Players</div>
-    <div id="title">bandy</div>
+    <div id="title">bandy controller</div>
     <div class= "bubble" id="liveState">Band Offline</div>
   </div>
   <div class="background"></div>
@@ -60,6 +60,8 @@
         <select id="selectOut"></select>
       </span>
     </div>
+    <hr>
+    <div>Settings:</div>
     <div class="settingParam">
       Ball Speed
       <input name="ballSpeed" type="number" id="ballSpeed">
@@ -74,8 +76,11 @@
       Room is Live
       <input name="isLive" type="checkbox" id="isLive">
     </div>
+    <div class="settingParam">
+      <button id="clearPlayers">Clear Players</button>
+    </div>
 
-    <div>
+    <div class="apply">
       <button id="applySettings">Apply Settings</button>
     </div>
   </div>

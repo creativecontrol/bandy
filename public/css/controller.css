@@ -68,10 +68,10 @@ h1 {
 }
 
 .splash a:link, a:visited {
-  color: ##C77C7C;
+  color: #C77C7C;
 }
 .splash-main b {
-  background: ##C77C7C;
+  background: #C77C7C;
   color: black;
   padding: 0 4px;
 }
@@ -119,7 +119,7 @@ h1 {
 }
 
 .controls button.settings:hover {
-  fill: ##C77C7C;
+  fill: #C77C7C;
 }
 
 .controls button span {
@@ -236,7 +236,7 @@ button.splash-button.small {
   border-bottom: 2px solid #C77C7C;
   background: transparent;
   box-shadow: none;
-  xmargin-bottom: 6px;
+  margin-bottom: 6px;
   width: 200px;
   height: 25px;
 }
@@ -295,10 +295,10 @@ label.radio > .control-indicator {
   width: 100%;
 }
 
-@media screen and (max-width: 525px) {
+@media screen and (max-width: 865px) {
   .header #title {
     color: #ebebeb;
-    font-size: 10vw;
+    font-size: 5vw;
     font-weight: 700;
   }
 
@@ -308,16 +308,24 @@ label.radio > .control-indicator {
   }
 }
 
-@media screen and (min-width: 526px) {
+@media screen and (min-width: 866px) {
   .header #title {
     color: #ebebeb;
-    font-size: 50px;
+    font-size: 4vw;
     font-weight: 700;
   }
 
   .bubble {
     font-size: 2vw;
     font-weight: 10;
+  }
+}
+
+@media screen and (min-width: 1150px) {
+  .header #title {
+    color: #ebebeb;
+    font-size: 3.5vw;
+    font-weight: 700;
   }
 }
 
@@ -330,4 +338,8 @@ label.radio > .control-indicator {
   padding: 5px;
   text-align: center;
   position: relative;
+}
+
+.apply button{
+  float: right;
 }
