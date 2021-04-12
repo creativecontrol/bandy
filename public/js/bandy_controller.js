@@ -35,14 +35,14 @@ class BandyController {
     this.curretOutput = null;
 
     this.settingsModal = document.querySelector('#settingsBox');
-    this.settingsAction = document.querySelector('#btnSettings');
+    this.settingsAction = document.querySelector('#settings');
+    this.settingsCloseAction = document.querySelector('#closeSettings');
     this.ballSpeedSetting = document.querySelector('#ballSpeed');
     this.eventURLSetting = document.querySelector('#eventURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#applySettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
 
-    this.liveState = document.querySelector('#liveState');
     this.playerCount = document.querySelector('#playerCount');
 
     this.headerSize = 60;
@@ -63,7 +63,7 @@ class BandyController {
     this.room = 'LiveRoom';
 
     this.player = new Player();
-    this.currentNumberOfPlayers = 0;
+    this.currentNumberOfPlayers = 10000;
     this.genie = new mm.PianoGenie(CONSTANTS.GENIE_CHECKPOINT);
     this.painter = new FloatyNotes(this.headerSize);
     this.piano = new Piano();
@@ -99,7 +99,7 @@ class BandyController {
     }
     // Start the drawing loop.
     this.onWindowResize();
-    this.updateButtonText();
+    // this.updateButtonText();
     window.requestAnimationFrame(() => this.painter.drawLoop());
 
     // Event listeners.
@@ -120,7 +120,10 @@ class BandyController {
       this.updateSettings();
     };
     this.settingsAction.onclick = () => {
-      console.debug('settings button clicked');
+      this.settingsModal.hidden = !this.settingsModal.hidden;
+    };
+
+    this.settingsCloseAction.onclick = () => {
       this.settingsModal.hidden = !this.settingsModal.hidden;
     };
 
@@ -165,12 +168,6 @@ class BandyController {
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
 
-    if (this.isLive) {
-      this.liveState.innerText = 'Band Live';
-    } else {
-      this.liveState.style.visibility = 'Band Offline';
-    }
-
     this.copySettingsToUI();
   }
 
@@ -206,8 +203,13 @@ class BandyController {
         });
       }
     });
-
-    const numberOfPlayers = _.size(playerStates);
+    let numberOfPlayers;
+    console.log(playerStates);
+    if (playerStates === null) {
+      numberOfPlayers = 0;
+    } else {
+      numberOfPlayers = _.size(playerStates);
+    }
     if (numberOfPlayers != this.currentNumberOfPlayers) {
       this.updateNumberOfPlayers(numberOfPlayers);
     }
@@ -225,6 +227,8 @@ class BandyController {
           'numberOfPlayers': numberOfPlayers,
         },
     );
+
+    this.currentNumberOfPlayers = numberOfPlayers;
   }
 
   /**

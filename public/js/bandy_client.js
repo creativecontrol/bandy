@@ -29,7 +29,10 @@ class BandyClient {
     this.setCanvasSize();
 
     this.playerCount = document.querySelector('#playerCount');
-    this.liveState = document.querySelector('#liveState');
+    this.infoAction = document.querySelector('#info');
+    this.infoBox = document.querySelector('#infoBox');
+    this.eventURLInfo = document.querySelector('#eventURL');
+    this.projectWebsiteInfo = document.querySelector('#projectWebsite');
 
     this.drawInterval = 10;
 
@@ -110,11 +113,6 @@ class BandyClient {
           const errorMessage = error.message;
           console.log(`${errorCode} ${errorMessage}`);
         });
-    // Create a new user entry
-
-    // Store that connection or user Id
-
-    // On disconnect remove player entry in database
   }
 
   /**
@@ -142,12 +140,8 @@ class BandyClient {
     this.projectWebsite = settings['projectWebsite'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
-
-    if (this.isLive) {
-      this.liveState.innerText = 'Band Live';
-    } else {
-      this.liveState.style.visibility = 'Band Offline';
-    }
+    this.eventURLInfo.innerHTML = `<a href="${this.eventURL}">${this.eventURL}</a>`;
+    this.projectWebsiteInfo.innerHTML = `<a href="${this.projectWebsite}">${this.projectWebsite}</a>`;
   }
 
   /**
@@ -188,6 +182,11 @@ class BandyClient {
     //   this.removePlayerEntry();
     // };
     // window.addEventListener('unload', this.removePlayerEntry.bind(this), false);
+
+    this.infoAction.onclick = () => {
+      this.infoBox.hidden = !this.infoBox.hidden;
+
+    }
 
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
     document.addEventListener('keyup', this.keyUpHandler.bind(this), false);

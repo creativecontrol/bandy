@@ -1,0 +1,188 @@
+  
+  html, body { height: 100%; }
+  html,
+  body {
+    background-color: #333333;
+    font-family: 'Comfortaa', 'cursive';
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+.header {
+  align-items: center;
+  display: flex;
+  font-family: 'Comfortaa', 'cursive';
+  height: 60px;
+  justify-content: center;
+  width: 100%;
+}
+
+@media screen and (max-width: 525px) {
+  .header #title {
+    color: #ebebeb;
+    font-size: 10vw;
+    font-weight: 700;
+  }
+
+  .bubble {
+    font-size: 3.5vw;
+    font-weight: 5;
+  }
+}
+
+@media screen and (min-width: 526px) {
+  .header #title {
+    color: #ebebeb;
+    font-size: 50px;
+    font-weight: 700;
+  }
+
+  .bubble {
+    font-size: 2.5vw;
+    font-weight: 5;
+  }
+}
+
+.bubble {
+  width: 20%;
+  margin: 10px auto;
+  border-radius: 15px;
+  background: #C77C7C;
+  color: #ebebeb;
+  padding: 5px;
+  text-align: center;
+  position: relative;
+}
+
+#infoBox {
+}
+
+button.splash-button {
+  cursor: pointer;
+  margin: 30px auto;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 22px;
+  display: block;
+  border: 2px solid #C77C7C;
+  background-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #C77C7C;
+  text-align: center;
+  transition: background-color 0.2s linear;
+  width: 200px;
+}
+
+button.splash-button:hover {
+  background-color: #C77C7C;
+  color: black;
+}
+
+button.splash-button.small {
+  padding: 8px;
+  font-size: 12px;
+  width: 150px;
+}
+
+.dialog {
+  font-weight: 100;
+  background: #333333;
+  color: white;
+  padding: 24px;
+  z-index: 10;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  width: 80%;
+  max-width: 500px;
+  transform: translateX(-50%);
+  border: 2px solid #C77C7C;
+  -webkit-box-shadow: 8px 8px 0 #C77C7C;
+  box-shadow: 8px 8px 0 #C77C7C;
+  text-align: left;
+}
+
+.dialog select {
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  border: none;
+  border-bottom: 2px solid #C77C7C;
+  background: transparent;
+  box-shadow: none;
+  margin-bottom: 6px;
+  width: 200px;
+  height: 25px;
+}
+
+.dialog select option {
+  background: #333333;
+}
+
+.dialog .settingParam {
+  padding: 8px;
+}
+
+.dialog a {
+  color: #C77C7C;
+}
+
+.dialog div {
+  margin-top: 10px;
+}
+
+.dialog .centered {
+  margin: auto;
+  padding-top: 20px;
+  text-align: center;
+}
+
+/***********************
+ * Radio buttons
+ ***********************/
+.control-indicator {
+  border: solid #C77C7C 2px;
+  color: #C77C7C;
+  border-radius: 2px;
+}
+label.radio {
+  position: relative;
+  display: inline-block;
+  padding-left: 24px;
+  margin-right: 24px;
+  cursor: pointer;
+}
+label.radio > input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+label.radio >  input:checked ~ .control-indicator {
+  background-color: #C77C7C;
+}
+label.radio > .control-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#inputNumButtons { vertical-align: middle; }
+
+canvas {
+    /* position: absolute; */
+    top: 0;
+  }
+
+  .controls {
+    display: none;
+  }
+

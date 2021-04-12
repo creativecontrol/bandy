@@ -42,7 +42,7 @@ body {
 .color-4 { background: #00e5ff; fill: #00e5ff; } 
 .color-5 { background: #2979ff; fill: #2979ff; } 
 .color-6 { background: #651fff; fill: #651fff; } 
-.color-7 { background: #d500f9; fill: #d500f9; }
+.color-7 { background: #d500f9;; fill: #d500f9; }
 
 canvas {
   position: absolute;
@@ -178,7 +178,7 @@ h1 {
 
 button.splash-button {
   cursor: pointer;
-  margin: 40px auto;
+  /* margin: 40px auto; */
   padding: 14px;
   font-family: inherit;
   font-size: 22px;
@@ -200,7 +200,8 @@ button.splash-button:hover {
 
 button.splash-button.small {
   padding: 8px;
-  font-size: 16px;
+  font-size: 12px;
+  width: 150px;
 }
 
 .splash-button.loading span {
