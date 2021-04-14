@@ -31,8 +31,15 @@ class BandyClient {
     this.playerCount = document.querySelector('#playerCount');
     this.infoAction = document.querySelector('#info');
     this.infoBox = document.querySelector('#infoBox');
-    this.eventURLInfo = document.querySelector('#eventURL');
+    this.eventInfo = document.querySelector('#eventInfo');
     this.projectWebsiteInfo = document.querySelector('#projectWebsite');
+
+    this.splash = document.querySelector('.splash');
+    this.game = document.querySelector('.loaded');
+
+    this.joinButtonAction = document.querySelector('#joinButton');
+    this.splashNoEvent = document.querySelector('.splash-noevent');
+    this.splashLive = document.querySelector('.splash-live');
 
     this.drawInterval = 10;
 
@@ -51,7 +58,7 @@ class BandyClient {
     this.ballSpeed = 3;
     this.numberOfPlayers;
     this.isLive;
-    this.eventURL;
+    this.eventInfoSetting;
     this.projectWebsite;
 
     this.moveX = this.ballSpeed;
@@ -105,7 +112,6 @@ class BandyClient {
     firebase.auth().signInAnonymously()
         .then(() => {
           this.connectToDatabase();
-          this.createNewPlayerEntry();
           this.run();
         })
         .catch((error) => {
@@ -136,12 +142,20 @@ class BandyClient {
     this.ballSpeed = settings['ballStartSpeed'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.isLive = settings['isLive'];
-    this.eventURL = settings['eventURL'];
+    this.eventInfoSetting = settings['eventInfo'];
     this.projectWebsite = settings['projectWebsite'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
-    this.eventURLInfo.innerHTML = `<a href="${this.eventURL}">${this.eventURL}</a>`;
+    this.eventInfo.innerHTML = this.eventInfoSetting;
     this.projectWebsiteInfo.innerHTML = `<a href="${this.projectWebsite}">${this.projectWebsite}</a>`;
+
+    if (this.isLive) {
+      this.splashNoEvent.hidden = true;
+      this.splashLive.hidden = false;
+    } else {
+      this.splashNoEvent.hidden = false;
+      this.splashLive.hidden = true;
+    }
   }
 
   /**
@@ -183,9 +197,14 @@ class BandyClient {
     // };
     // window.addEventListener('unload', this.removePlayerEntry.bind(this), false);
 
+    this.joinButtonAction.onclick = () => {
+      this.createNewPlayerEntry();
+      this.splash.hidden = true;
+      this.game.hidden = false;
+
+    }
     this.infoAction.onclick = () => {
       this.infoBox.hidden = !this.infoBox.hidden;
-
     }
 
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);

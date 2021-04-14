@@ -38,7 +38,7 @@ class BandyController {
     this.settingsAction = document.querySelector('#settings');
     this.settingsCloseAction = document.querySelector('#closeSettings');
     this.ballSpeedSetting = document.querySelector('#ballSpeed');
-    this.eventURLSetting = document.querySelector('#eventURL');
+    this.eventInfoSetting = document.querySelector('#eventInfo');
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#applySettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
@@ -47,7 +47,7 @@ class BandyController {
 
     this.headerSize = 60;
 
-    this.eventURL = '';
+    this.eventInfo = '';
     this.ballSpeed;
     this.isLive;
 
@@ -107,8 +107,8 @@ class BandyController {
     this.ballSpeedSetting.onchange = () => {
       this.ballSpeed = this.ballSpeedSetting.value;
     };
-    this.eventURLSetting.onchange = () => {
-      this.eventURL = this.eventURLSetting.value;
+    this.eventInfoSetting.onchange = () => {
+      this.eventInfo = this.eventInfoSetting.value;
     };
     this.roomIsLiveSetting.onchange = () => {
       this.isLive = this.roomIsLiveSetting.checked;
@@ -164,7 +164,7 @@ class BandyController {
     this.ballSpeed = settings['ballStartSpeed'];
     this.isLive = settings['isLive'];
     this.numberOfPlayers = settings['numberOfPlayers'];
-    this.eventURL = settings['eventURL'];
+    this.eventInfo = settings['eventInfo'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
 
@@ -177,7 +177,7 @@ class BandyController {
   copySettingsToUI() {
     this.ballSpeedSetting.value = this.ballSpeed;
     this.roomIsLiveSetting.checked = this.isLive;
-    this.eventURLSetting.value = this.eventURL;
+    this.eventInfoSetting.value = this.eventInfo;
   }
 
   /**
@@ -254,7 +254,7 @@ class BandyController {
     settings.update(
         {
           'ballStartSpeed': this.ballSpeed,
-          'eventURL': this.eventURL,
+          'eventInfo': this.eventInfo,
           'isLive': this.isLive,
         },
     );

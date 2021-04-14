@@ -32,12 +32,37 @@
 </head>
 <body>
 
+  <div class="splash">
+    <h1>Welcome to bandy</h1>
+    <img class="splash-image" src="android-chrome-192x192.png" alt="bandy logo">
+    <p>play a simple game to collectively create music on real musical instruments over the internet</p>
+    <p>. . .</p>
+    <div class="splash-noevent">        
+      <p>
+        There is currently no live <span id="bandy">bandy</span> event. Please check back on May 15th and 16th, 2021 to play along during the <br>
+        <a href="https://www.makermusicfestival.com/">Maker Music Festival</a> 
+      </p>
+      <p>To find out more about <span id="bandy">bandy</span> please visit <br>
+        <span id="projectWebsite"></span>
+      </p>
+    </div>
+    <div class="splash-live" hidden>
+      <p>There is currently a live performance going on and you are welcome to join and be a part of the band !</p>
+      <p>Before you Join the Band you'll want to join the performance at <span id="eventInfo"></span></p>
+      <button class="splash-button loading" id="joinButton" autofocus><span>Join the Band</span></button>
+    </div>
+  </div>
+
+  <div class="loaded" hidden>
     <div class="header">
       <div class= "bubble" id="playerCount">Players</div>
       <div id="title">bandy</div>
       <div class= "bubble" id="info">Info</div>
     </div>
     <canvas id="canvas"></canvas>
+    <div id="paddle-instructions" hidden></div>
+    <div id="tombola-instructions" hidden></div>
+  </div>
 
     <div class="dialog" id="infoBox" hidden>
       <div>
@@ -54,7 +79,7 @@
         </span>
       </div>
       <div>
-        Event URL <span id="eventURL"></span>
+        Event Info <span id="eventInfo"></span>
       </div>
       <div class="centered">
         Visit the Project website for more Info <br>
