@@ -9,9 +9,9 @@ module.exports = {
   'parserOptions': {
     'ecmaVersion': 12,
   },
-  'plugins': {
-    'html'
-  },
+  'plugins': [
+    'html',
+  ],
   'rules': {
   },
 };

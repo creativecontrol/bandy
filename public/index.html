@@ -28,6 +28,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/client.css">
+
+    <script src="js/helpers.js" defer></script>
+    <script src="js/paddle.js" defer></script>
+    <script src="js/tombola.js" defer></script>
     <script src="js/bandy_client.js" defer></script>
 </head>
 <body>
@@ -53,6 +57,18 @@
     </div>
   </div>
 
+  <div class="gameChoice" hidden>
+    <div>
+      Choose your game. If you want to try another you can change at any time from the <em>info</em> menu.
+    </div>
+    <div>
+      <button class="splash-button small" id="tombolaButton">tombola</button>
+    </div>
+    <div>
+      <button class="splash-button small" id="paddleButton">paddle</button>
+    </div>
+  </div>
+
   <div class="loaded" hidden>
     <div class="header">
       <div class= "bubble" id="playerCount">Players</div>
@@ -69,11 +85,11 @@
         Select game
         <span id="games">
           <label class="game">
-            <input type="radio" name="toggle">
+            <input type="radio" name="gameSelect" value="paddle" id="paddleRadio">
             <span>paddle</span>
           </label>
           <label class="game">
-            <input type="radio" name="toggle">
+            <input type="radio" name="gameSelect" value="tombola" id="tombolaRadio">
             <span>tombola</span>
           </label>
         </span>
