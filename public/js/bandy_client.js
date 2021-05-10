@@ -267,6 +267,8 @@ class BandyClient {
     } else if (e.key == ' ') {
       if (this.currentGame == 'paddle') {
         this.paddleGame.ballStopped = false;
+      } else if (this.currentGame == 'tombola') {
+        this.tombolaGame.ballStopped = false;
       }
     }
   }

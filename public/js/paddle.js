@@ -33,7 +33,7 @@ class Paddle {
       ((90 * (Math.random())) - 45));
 
     this.paddleColor = '#EBEBEB';
-    this.paddleWidth = 75;
+    this.paddleWidth = 60;
     this.paddleHeight = 15;
     this.paddleBottomPadding = 55;
     this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
