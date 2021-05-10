@@ -125,6 +125,37 @@ button.splash-button.small {
   overflow: hidden;
 }
 
+#instructions {
+  font-weight: 100;
+  background: #33333377;
+  color: white;
+  z-index: 10;
+  position: fixed;
+  padding-top: 30px;
+  top: 60px;
+  height: 100%;
+  left: 50%;
+  width: 100%;
+  max-width: 500px;
+  transform: translateX(-50%);
+  text-align: center;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+.fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 4s linear, opacity 4s ease;
+}
+
 .dialog {
   font-weight: 100;
   background: #333333;

@@ -37,6 +37,8 @@ class BandyClient {
     this.headerSize = 60;
     this.setCanvasSize();
 
+    this.instructionTime = 10000;
+
     this.playerCount = document.querySelector('#playerCount');
     this.infoAction = document.querySelector('#info');
     this.infoBox = document.querySelector('#infoBox');
@@ -46,12 +48,15 @@ class BandyClient {
     this.splash = document.querySelector('.splash');
     this.gameChoice = document.querySelector('.gameChoice');
     this.game = document.querySelector('.loaded');
+    this.instructions = document.querySelector('#instructions');
+    this.showInstructionsAction = document.querySelector('#showInstructions');
 
     this.joinButtonAction = document.querySelector('#joinButton');
     this.splashNoEvent = document.querySelector('.splash-noevent');
     this.splashLive = document.querySelector('.splash-live');
 
-    this.gameSelectAction = document.querySelectorAll('input[name="gameSelect"]');
+    this.gameSelectAction =
+        document.querySelectorAll('input[name="gameSelect"]');
     this.tombolaButtonAction = document.querySelector('#tombolaButton');
     this.tombolaRadioAction = document.querySelector('#tombolaRadio');
     this.paddleButtonAction = document.querySelector('#paddleButton');
@@ -59,6 +64,11 @@ class BandyClient {
 
     this.paddleGame = new Paddle(this.canvas, this.ctx, this);
     this.tombolaGame = new Tombola(this.canvas, this.ctx, this);
+
+    this.firstPlay = {
+      paddle: true,
+      tombola: true,
+    };
 
     this.currentGame = 'tombola';
 
@@ -157,26 +167,62 @@ class BandyClient {
     this.joinButtonAction.onclick = () => {
       this.createNewPlayerEntry();
       this.splash.hidden = true;
-      this.game.hidden = false;
+      this.gameChoice.hidden = false;
+      this.game.hidden = true;
     };
 
     // Game selection from the intro screen
     this.tombolaButtonAction.onclick = () => {
       this.currentGame = 'tombola';
+      this.tombolaRadioAction.checked = true;
+      this.firstPlay.tombola = false;
+
+      this.splash.hidden = true;
+      this.gameChoice.hidden = true;
+      this.game.hidden = false;
+      this.tombolaGame.setInstructions();
+      this.tombolaGame.drawInstructions();
     };
     this.paddleButtonAction.onclick = () => {
       this.currentGame = 'paddle';
+      this.firstPlay.paddle = false;
+
+      this.paddleRadioAction.checked = true;
+      this.splash.hidden = true;
+      this.gameChoice.hidden = true;
+      this.game.hidden = false;
+      this.paddleGame.setInstructions();
+      this.paddleGame.drawInstructions();
     };
 
     // Game selection from the Info box
     this.gameSelectAction.forEach((gameSelect) => {
       gameSelect.onchange = (game) => {
         this.currentGame = game.srcElement.value;
+
+        if (this.currentGame == 'paddle') {
+          this.paddleGame.setInstructions();
+          if (this.firstPlay.paddle) {
+            this.paddleGame.drawInstructions();
+            this.firstPlay.paddle = false;
+          }
+        } else if (this.currentGame == 'tombola') {
+          this.tombolaGame.setInstructions();
+          if (this.firstPlay.tombola) {
+            this.tombolaGame.drawInstructions();
+            this.firstPlay.tombola = false;
+          }
+        }
       };
     });
 
     this.infoAction.onclick = () => {
       this.infoBox.hidden = !this.infoBox.hidden;
+    };
+
+    this.showInstructionsAction.onclick = () => {
+      this.infoBox.hidden = !this.infoBox.hidden;
+      this.drawInstructions();
     };
 
     document.addEventListener('keydown', this.keyDownHandler.bind(this), false);
@@ -215,6 +261,17 @@ class BandyClient {
     } else if (this.currentGame == 'tombola') {
       this.tombolaGame.update();
     }
+  }
+
+  /**
+   *
+   */
+  drawInstructions() {
+    // Show instructions text and then fade it out.
+    this.instructions.className = 'fadeIn';
+    setTimeout(() => {
+      this.instructions.className = 'fadeOut';
+    }, this.instructionTime);
   }
 
   /**

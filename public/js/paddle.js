@@ -12,6 +12,21 @@ class Paddle {
     this.context = _context;
     this.parent = _parent;
 
+    this.instructionTime = 14000;
+    this.instructionText = `
+    <div>
+      <h3> Paddle Game Instructions </h3>
+      Use the Info Button above for Help <br>
+      </br>
+      <strong>Touch Controls:</strong> </br>
+      Tap to start the ball. </br>
+      Press to the left or right side of the white platform to move it in that direction. </br>
+      </br>
+      <strong>Keyboard Controls:</strong> </br>
+      Press the spacebar to start the ball. </br>
+      Use the Arrow Keys to move the white platform left or right. </br>
+    </div>`;
+
     this.ballColor = '#CA7C7C';
     this.ballX = canvas.width/2;
     this.ballY = canvas.height-30;
@@ -64,6 +79,7 @@ class Paddle {
     ];
 
     this.blocksHit = new Array(this.numberOfBlocks).fill(0);
+    this.blockStatusResetTime = 150;
 
     this.blocksWidth = (this.numberOfBlocks * this.blockSize) +
       ((this.numberOfBlocks-1)*this.blockSpacing);
@@ -74,8 +90,20 @@ class Paddle {
   /**
    *
    */
-  init() {
+  setInstructions() {
+    this.parent.instructions.innerHTML = this.instructionText;
+  }
 
+  /**
+   *
+   */
+  drawInstructions() {
+    // Show instructions text and then fade it out.
+    this.parent.instructions.className = 'fadeIn';
+    setTimeout(() => {
+      this.parent.instructions.className = 'fadeOut';
+      // this.parent.instructions.innerHTML = '';
+    }, this.instructionTime);
   }
 
   /**
@@ -290,6 +318,6 @@ class Paddle {
       status = {};
       status[block.toString()] = OFF;
       this.parent.playerId.update(status);
-    }, 100);
+    }, this.blockStatusResetTime);
   }
 } // End of Paddle Class

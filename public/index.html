@@ -61,7 +61,7 @@
 
   <div class="gameChoice" hidden>
     <div>
-      Choose your game. If you want to try another you can change at any time from the <em>info</em> menu.
+      Choose your game. If you want to try another you can change at any time from the <em>Info</em> menu.
     </div>
     <div>
       <button class="splash-button small" id="tombolaButton">tombola</button>
@@ -78,8 +78,7 @@
       <div class= "bubble" id="info">Info</div>
     </div>
     <canvas id="canvas"></canvas>
-    <div id="paddle-instructions" hidden></div>
-    <div id="tombola-instructions" hidden></div>
+    <div id="instructions" class="fadeOut"></div>
   </div>
 
     <div class="dialog" id="infoBox" hidden>
@@ -87,12 +86,12 @@
         Select game
         <span id="games">
           <label class="game">
-            <input type="radio" name="gameSelect" value="paddle" id="paddleRadio">
-            <span>paddle</span>
-          </label>
-          <label class="game">
             <input type="radio" name="gameSelect" value="tombola" id="tombolaRadio">
             <span>tombola</span>
+          </label>
+          <label class="game">
+            <input type="radio" name="gameSelect" value="paddle" id="paddleRadio">
+            <span>paddle</span>
           </label>
         </span>
       </div>
@@ -106,8 +105,9 @@
       <div class="centered">
         created by Thadeus Frazier-Reed 2021
       </div>
+      <button class="splash-button small" id="showInstructions">Show Instructions</button>
         <button class="splash-button small" onclick="infoBox.hidden = !infoBox.hidden">Close</button>
-      </div>
+    </div>
 
     
 </body>

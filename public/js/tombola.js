@@ -13,11 +13,22 @@ class Tombola {
     this.context = _context;
     this.parent = _parent;
 
+    this.instructionTime = 14000;
+    this.instructionText = `
+    <div>
+      <h3> Tombola Game Instructions </h3>
+      Use the Info Button above for Help <br>
+      </br>
+      Tap the screen or press the spacebar to start the ball. </br>
+      When it stops start it again!
+      
+    </div>`;
+
     this.paddleColor = '#EBEBEB';
     this.paddleWidthScreenPortion = 0.2;
     this.paddleWidth = this.canvas.width*this.paddleWidthScreenPortion;
     this.paddleHeight = 15;
-    this.paddleBottomPadding = 15;
+    this.paddleBottomPadding = 0;
     this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
     this.paddleY = this.canvas.height -
       (this.paddleHeight + this.paddleBottomPadding);
@@ -62,6 +73,7 @@ class Tombola {
     ];
 
     this.panelsHit = new Array(this.numberOfPanels).fill(0);
+    this.panelStatusResetTime = 150;
 
     this.panelSize = {
       w: 60,
@@ -89,9 +101,21 @@ class Tombola {
   };
 
   /**
+   * 
+   */
+  setInstructions() {
+    this.parent.instructions.innerHTML = this.instructionText;
+  }
+
+  /**
    *
    */
-  init() {
+  drawInstructions() {
+    // Show instructions text and then fade it out.
+    this.parent.instructions.className = 'fadeIn';
+    setTimeout(() => {
+      this.parent.instructions.className = 'fadeOut';
+    }, this.instructionTime);
   }
 
   /**
@@ -396,6 +420,6 @@ class Tombola {
       status = {};
       status[panel.toString()] = OFF;
       this.parent.playerId.update(status);
-    }, 100);
+    }, this.panelStatusResetTime);
   }
 } // End of Tombola Class
