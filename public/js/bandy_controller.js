@@ -41,6 +41,7 @@ class BandyController {
     this.noEventInfoSetting = document.querySelector('#noEventInfo');
     this.eventInfoSetting = document.querySelector('#eventInfo');
     this.eventURLSetting = document.querySelector('#eventURL');
+    this.projectWebsiteSetting = document.querySelector('#projectWebsite');
     this.helpURLSetting = document.querySelector('#helpURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#storeSettings');
@@ -120,6 +121,9 @@ class BandyController {
     this.eventURLSetting.onchange = () => {
       this.eventURL = this.eventURLSetting.value;
     };
+    this.projectWebsiteSetting.onchange = () => {
+      this.projectWebsite = this.projectWebsiteSetting.value;
+    };
     this.helpURLSetting.onchange = () => {
       this.helpURL = this.helpURLSetting.value;
     };
@@ -183,6 +187,7 @@ class BandyController {
     this.noEventInfo = settings['noEventInfo'];
     this.eventInfo = settings['eventInfo'];
     this.eventURL = settings['eventURL'];
+    this.projectWebsite = settings['projectWebsite'];
     this.helpURL = settings['helpURL'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
@@ -199,6 +204,7 @@ class BandyController {
     this.noEventInfoSetting.value = this.noEventInfo;
     this.eventInfoSetting.value = this.eventInfo;
     this.eventURLSetting.value = this.eventURL;
+    this.projectWebsiteSetting.value = this.projectWebsite;
     this.helpURLSetting.value = this.helpURL;
   }
 
@@ -296,6 +302,7 @@ class BandyController {
           'noEventInfo': this.noEventInfo,
           'eventInfo': this.eventInfo,
           'eventURL': this.eventURL,
+          'projectWebsite': this.projectWebsite,
           'helpURL': this.helpURL,
           'isLive': this.isLive,
         },
