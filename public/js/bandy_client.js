@@ -14,8 +14,8 @@
  * }
  *
  * TODO:
- *  - Make any links open in new window.
- *  - Update CSS formatting of radios to buttons
+ *
+ *
  *
  */
 
@@ -125,17 +125,11 @@ class BandyClient {
     this.noEventInfo.innerHTML = this.noEventInfoSetting;
     this.eventInfo.innerHTML = this.eventInfoSetting;
 
-    this.eventURL.innerHTML =
-        `<a href="${this.eventURLSetting}">` +
-        `${this.eventURLSetting}</a>`;
+    this.eventURL.innerHTML = this.eventURLSetting;
     this.projectWebsite.forEach((element) => {
-      element.innerHTML =
-        `<a href="${this.projectWebsiteSetting}">` +
-        `${this.projectWebsiteSetting}</a>`;
+      element.innerHTML = this.projectWebsiteSetting;
     });
-    this.helpURL.innerHTML =
-        `<a href="${this.helpURLSetting}">` +
-        `${this.helpURLSetting}</a>`;
+    this.helpURL.innerHTML = this.helpURLSetting;
 
     if (this.isLive) {
       this.splashNoEvent.hidden = true;

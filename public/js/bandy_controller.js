@@ -43,7 +43,7 @@ class BandyController {
     this.eventURLSetting = document.querySelector('#eventURL');
     this.helpURLSetting = document.querySelector('#helpURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
-    this.updateSettingsAction = document.querySelector('#applySettings');
+    this.updateSettingsAction = document.querySelector('#storeSettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
     this.clearStatsAction = document.querySelector('#clearStats');
 
@@ -280,7 +280,7 @@ class BandyController {
       this.database.ref(`${initStatPath}paddle`).set(0);
       this.database.ref(`${initStatPath}tombola`).set(0);
       this.database.ref(`${changeStatPath}paddle`).set(0);
-      this.database.ref(`${initStatPath}tombola`).set(0);
+      this.database.ref(`${changeStatPath}tombola`).set(0);
     } else {
     }
   }
@@ -293,7 +293,10 @@ class BandyController {
     settings.update(
         {
           'ballStartSpeed': this.ballSpeed,
+          'noEventInfo': this.noEventInfo,
           'eventInfo': this.eventInfo,
+          'eventURL': this.eventURL,
+          'helpURL': this.helpURL,
           'isLive': this.isLive,
         },
     );
