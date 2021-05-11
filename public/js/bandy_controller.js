@@ -43,7 +43,7 @@ class BandyController {
     this.eventURLSetting = document.querySelector('#eventURL');
     this.helpURLSetting = document.querySelector('#helpURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
-    this.updateSettingsAction = document.querySelector('#applySettings');
+    this.updateSettingsAction = document.querySelector('#storeSettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
     this.clearStatsAction = document.querySelector('#clearStats');
 
@@ -293,7 +293,10 @@ class BandyController {
     settings.update(
         {
           'ballStartSpeed': this.ballSpeed,
+          'noEventInfo': this.noEventInfo,
           'eventInfo': this.eventInfo,
+          'eventURL': this.eventURL,
+          'helpURL': this.helpURL,
           'isLive': this.isLive,
         },
     );
