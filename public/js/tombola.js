@@ -15,14 +15,12 @@ class Tombola {
 
     this.instructionTime = 14000;
     this.instructionText = `
-    <div>
       <h3> Tombola Game Instructions </h3>
       Use the Info Button above for Help <br>
       </br>
       Tap the screen or press the spacebar to start the ball. </br>
       When it stops start it again!
-      
-    </div>`;
+      `;
 
     this.paddleColor = '#EBEBEB';
     this.paddleWidthScreenPortion = 0.2;
@@ -56,7 +54,7 @@ class Tombola {
         ((90 * (Math.random())) - 45)),
     };
 
-    this.tombolaSize = 125;
+    this.tombolaSize = 105;
     this.tombolaRotation = Date.now()/50 % 360;
 
     this.numberOfPanels = 8;
@@ -76,7 +74,7 @@ class Tombola {
     this.panelStatusResetTime = 150;
 
     this.panelSize = {
-      w: 60,
+      w: 35,
       h: 15,
     };
 
@@ -93,7 +91,7 @@ class Tombola {
 
     this.panelGroupCenter = {
       x: this.canvas.width/2 - 30,
-      y: this.canvas.height/4,
+      y: this.canvas.height * 0.37,
     };
 
     this.leftGuide;

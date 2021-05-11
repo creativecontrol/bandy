@@ -38,10 +38,14 @@ class BandyController {
     this.settingsAction = document.querySelector('#settings');
     this.settingsCloseAction = document.querySelector('#closeSettings');
     this.ballSpeedSetting = document.querySelector('#ballSpeed');
+    this.noEventInfoSetting = document.querySelector('#noEventInfo');
     this.eventInfoSetting = document.querySelector('#eventInfo');
+    this.eventURLSetting = document.querySelector('#eventURL');
+    this.helpURLSetting = document.querySelector('#helpURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
     this.updateSettingsAction = document.querySelector('#applySettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
+    this.clearStatsAction = document.querySelector('#clearStats');
 
     this.playerCount = document.querySelector('#playerCount');
 
@@ -107,14 +111,26 @@ class BandyController {
     this.ballSpeedSetting.onchange = () => {
       this.ballSpeed = this.ballSpeedSetting.value;
     };
+    this.noEventInfoSetting.onchange = () => {
+      this.noEventInfo = this.noEventInfoSetting.value;
+    };
     this.eventInfoSetting.onchange = () => {
       this.eventInfo = this.eventInfoSetting.value;
+    };
+    this.eventURLSetting.onchange = () => {
+      this.eventURL = this.eventURLSetting.value;
+    };
+    this.helpURLSetting.onchange = () => {
+      this.helpURL = this.helpURLSetting.value;
     };
     this.roomIsLiveSetting.onchange = () => {
       this.isLive = this.roomIsLiveSetting.checked;
     };
     this.clearPlayersAction.onclick = () => {
       this.clearPlayers();
+    };
+    this.clearStatsAction.onclick = () => {
+      this.clearStats();
     };
     this.updateSettingsAction.onclick = () => {
       this.updateSettings();
@@ -164,7 +180,10 @@ class BandyController {
     this.ballSpeed = settings['ballStartSpeed'];
     this.isLive = settings['isLive'];
     this.numberOfPlayers = settings['numberOfPlayers'];
+    this.noEventInfo = settings['noEventInfo'];
     this.eventInfo = settings['eventInfo'];
+    this.eventURL = settings['eventURL'];
+    this.helpURL = settings['helpURL'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
 
@@ -177,7 +196,10 @@ class BandyController {
   copySettingsToUI() {
     this.ballSpeedSetting.value = this.ballSpeed;
     this.roomIsLiveSetting.checked = this.isLive;
+    this.noEventInfoSetting.value = this.noEventInfo;
     this.eventInfoSetting.value = this.eventInfo;
+    this.eventURLSetting.value = this.eventURL;
+    this.helpURLSetting.value = this.helpURL;
   }
 
   /**
@@ -245,6 +267,23 @@ class BandyController {
     }
   }
 
+  /**
+   *
+   */
+  clearStats() {
+    const initStatPath = `${this.room}/stats/initialGame/`;
+    const changeStatPath = `${this.room}/stats/changeTo/`;
+
+    const result =
+      confirm('Are you sure you want to zero out statistics from the database?');
+    if (result) {
+      this.database.ref(`${initStatPath}paddle`).set(0);
+      this.database.ref(`${initStatPath}tombola`).set(0);
+      this.database.ref(`${changeStatPath}paddle`).set(0);
+      this.database.ref(`${initStatPath}tombola`).set(0);
+    } else {
+    }
+  }
   /**
    *
    */

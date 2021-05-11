@@ -29,8 +29,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/client.css">
 
-    <script src="./js/two.min.js" defer></script>
-
     <script src="js/helpers.js" defer></script>
     <script src="js/paddle.js" defer></script>
     <script src="js/tombola.js" defer></script>
@@ -44,30 +42,28 @@
     <p>play a simple game to collectively create music on real musical instruments over the internet</p>
     <p>. . .</p>
     <div class="splash-noevent">        
-      <p>
-        There is currently no live <span id="bandy">bandy</span> event. Please check back on May 15th and 16th, 2021 to play along during the <br>
-        <a href="https://www.makermusicfestival.com/">Maker Music Festival</a> 
-      </p>
+      <span id="noEventInfo"></span>
+
       <p>To find out more about <span id="bandy">bandy</span> please visit <br>
-        <span id="projectWebsite"></span>
+        <span id="projectWebsite" class="url"></span>
       </p>
     </div>
     <div class="splash-live" hidden>
-      <p>There is currently a live performance going on and you are welcome to join and be a part of the band !</p>
-      <p>Before you Join the Band you'll want to join the performance at <span id="eventInfo"></span></p>
-      <button class="splash-button loading" id="joinButton" autofocus><span>Join the Band</span></button>
+      <span id="eventInfo"></span>
+      <button class="splash-button join" id="joinButton" autofocus><span>Join the Band</span></button>
     </div>
   </div>
 
   <div class="gameChoice" hidden>
     <div>
-      Choose your game. If you want to try another you can change at any time from the <em>Info</em> menu.
+      <h2>Choose your Game</h2></br>
+      If you want to try another you can change at any time from the <em>Info</em> menu.
     </div>
     <div>
-      <button class="splash-button small" id="tombolaButton">tombola</button>
+      <button class="splash-button" id="tombolaButton">tombola</button>
     </div>
     <div>
-      <button class="splash-button small" id="paddleButton">paddle</button>
+      <button class="splash-button" id="paddleButton">paddle</button>
     </div>
   </div>
 
@@ -83,24 +79,23 @@
 
     <div class="dialog" id="infoBox" hidden>
       <div>
-        Select game
-        <span id="games">
-          <label class="game">
+        Select game <br>
+        <div id="games" class="games centered">
             <input type="radio" name="gameSelect" value="tombola" id="tombolaRadio">
-            <span>tombola</span>
-          </label>
-          <label class="game">
+            <label for="tombolaRadio">tombola</label>
+          
             <input type="radio" name="gameSelect" value="paddle" id="paddleRadio">
-            <span>paddle</span>
-          </label>
-        </span>
+            <label for="paddleRadio">paddle</label>
+        </div>
       </div>
       <div>
-        Event Info <span id="eventInfo"></span>
+        Event URL <span id="eventURL"></span>
       </div>
       <div class="centered">
-        Visit the Project website for more Info <br>
-        <span id="projectWebsite"></span>
+        Visit the Project website for more info <br>
+        <span id="projectWebsite"></span><br>
+        For additional Help visit <br>
+        <span id="helpURL"></span><br>
       </div>
       <div class="centered">
         created by Thadeus Frazier-Reed 2021

@@ -221,7 +221,7 @@ button.splash-button.small {
   top: 100px;
   left: 50%;
   width: 80%;
-  max-width: 500px;
+  max-width: 1000px;
   transform: translateX(-50%);
   border: 2px solid #C77C7C;
   -webkit-box-shadow: 8px 8px 0 #C77C7C;
@@ -250,6 +250,14 @@ button.splash-button.small {
   padding: 8px;
 }
 
+.dialog textarea {
+  height: 60px;
+  width: 100%;
+}
+
+.dialog input {
+  width: 100%;
+}
 /***********************
  * Radio buttons
  ***********************/

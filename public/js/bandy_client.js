@@ -14,9 +14,8 @@
  * }
  *
  * TODO:
- *  - Create a game selection screen on joining. Display directions for the game during the first couple hits of play.
- *      Then hide them.
- *  - Finish Tombola
+ *  - Make any links open in new window.
+ *  - Update CSS formatting of radios to buttons
  *
  */
 
@@ -42,8 +41,11 @@ class BandyClient {
     this.playerCount = document.querySelector('#playerCount');
     this.infoAction = document.querySelector('#info');
     this.infoBox = document.querySelector('#infoBox');
+    this.noEventInfo = document.querySelector('#noEventInfo');
     this.eventInfo = document.querySelector('#eventInfo');
-    this.projectWebsiteInfo = document.querySelector('#projectWebsite');
+    this.eventURL = document.querySelector('#eventURL');
+    this.projectWebsite = document.querySelectorAll('#projectWebsite');
+    this.helpURL = document.querySelector('#helpURL');
 
     this.splash = document.querySelector('.splash');
     this.gameChoice = document.querySelector('.gameChoice');
@@ -70,7 +72,7 @@ class BandyClient {
       tombola: true,
     };
 
-    this.currentGame = 'tombola';
+    this.currentGame = '';
 
     this.drawInterval = 10;
 
@@ -113,12 +115,27 @@ class BandyClient {
     this.ballSpeed = settings['ballStartSpeed'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.isLive = settings['isLive'];
+    this.noEventInfoSetting = settings['noEventInfo'];
     this.eventInfoSetting = settings['eventInfo'];
-    this.projectWebsite = settings['projectWebsite'];
+    this.eventURLSetting = settings['eventURL'];
+    this.projectWebsiteSetting = settings['projectWebsite'];
+    this.helpURLSetting = settings['helpURL'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
+    this.noEventInfo.innerHTML = this.noEventInfoSetting;
     this.eventInfo.innerHTML = this.eventInfoSetting;
-    this.projectWebsiteInfo.innerHTML = `<a href="${this.projectWebsite}">${this.projectWebsite}</a>`;
+
+    this.eventURL.innerHTML =
+        `<a href="${this.eventURLSetting}">` +
+        `${this.eventURLSetting}</a>`;
+    this.projectWebsite.forEach((element) => {
+      element.innerHTML =
+        `<a href="${this.projectWebsiteSetting}">` +
+        `${this.projectWebsiteSetting}</a>`;
+    });
+    this.helpURL.innerHTML =
+        `<a href="${this.helpURLSetting}">` +
+        `${this.helpURLSetting}</a>`;
 
     if (this.isLive) {
       this.splashNoEvent.hidden = true;
@@ -176,6 +193,7 @@ class BandyClient {
       this.currentGame = 'tombola';
       this.tombolaRadioAction.checked = true;
       this.firstPlay.tombola = false;
+      this.addInitialStat();
 
       this.splash.hidden = true;
       this.gameChoice.hidden = true;
@@ -186,6 +204,7 @@ class BandyClient {
     this.paddleButtonAction.onclick = () => {
       this.currentGame = 'paddle';
       this.firstPlay.paddle = false;
+      this.addInitialStat();
 
       this.paddleRadioAction.checked = true;
       this.splash.hidden = true;
@@ -199,6 +218,7 @@ class BandyClient {
     this.gameSelectAction.forEach((gameSelect) => {
       gameSelect.onchange = (game) => {
         this.currentGame = game.srcElement.value;
+        this.addChangeStat();
 
         if (this.currentGame == 'paddle') {
           this.paddleGame.setInstructions();
@@ -213,15 +233,17 @@ class BandyClient {
             this.firstPlay.tombola = false;
           }
         }
+
+        this.toggleInfoBox();
       };
     });
 
     this.infoAction.onclick = () => {
-      this.infoBox.hidden = !this.infoBox.hidden;
+      this.toggleInfoBox();
     };
 
     this.showInstructionsAction.onclick = () => {
-      this.infoBox.hidden = !this.infoBox.hidden;
+      this.toggleInfoBox();
       this.drawInstructions();
     };
 
@@ -238,6 +260,31 @@ class BandyClient {
         this.touchendHandler.bind(this), false);
 
     this.interval = setInterval(this.draw.bind(this), this.drawInterval);
+  }
+
+  /**
+   *
+   */
+  toggleInfoBox() {
+    this.infoBox.hidden = !this.infoBox.hidden;
+  }
+
+  /**
+   *
+   */
+  addInitialStat() {
+    const statPath = `${this.room}/stats/initialGame/${this.currentGame}`;
+    this.database.ref(statPath)
+        .set(firebase.database.ServerValue.increment(1));
+  }
+
+  /**
+   *
+   */
+  addChangeStat() {
+    const statPath = `${this.room}/stats/changeTo/${this.currentGame}`;
+    this.database.ref(statPath)
+        .set(firebase.database.ServerValue.increment(1));
   }
 
   /**
