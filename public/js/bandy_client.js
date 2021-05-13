@@ -419,6 +419,8 @@ class BandyClient {
         this.paddleGame.rightPressed = false;
         this.paddleGame.leftPressed = false;
       }
+    } else if (this.currentGame == 'tombola') {
+      this.tombolaGame.ballStopped = false;
     }
   }
 

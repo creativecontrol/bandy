@@ -177,6 +177,7 @@ button.join {
 }
 
 #instructions {
+  pointer-events: none;
   font-weight: 100;
   background: #33333377;
   color: white;
