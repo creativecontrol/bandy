@@ -80,11 +80,11 @@ body {
   filter: drop-shadow(0 0 7px #ebebeb77);
 }
 
-.splash a {
+a {
   color: #C77C7C;
 }
 
-.splash #bandy {
+#bandy {
   color: #C77C7C;
 }
 
@@ -116,8 +116,20 @@ button.splash-button.small {
   width: 150px;
 }
 
+button.instruct {
+  width: 80%;
+}
 button.join {
   width: 80%;
+}
+
+.join {
+  font-size: 16px;
+  padding: 20px;
+  line-height: 1.5;
+  margin: auto;
+  text-align: center;
+  overflow: hidden;
 }
 
 .gameChoice {

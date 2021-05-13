@@ -16,13 +16,12 @@ class Tombola {
     this.instructionTime = 14000;
     this.instructionText = `
       <h3> Tombola Game Instructions </h3>
-      Use the Info Button above for Help <br>
+      Tap the screen or press the spacebar, that's it ! </br>
       </br>
-      Tap the screen or press the spacebar to start the ball. </br>
-      When it stops start it again!
+      Use the Info Button above for Help </br>
       `;
 
-    this.paddleColor = '#EBEBEB';
+    this.paddleColor = '#333333';//'#EBEBEB';
     this.paddleWidthScreenPortion = 0.2;
     this.paddleWidth = this.canvas.width*this.paddleWidthScreenPortion;
     this.paddleHeight = 15;
@@ -94,8 +93,8 @@ class Tombola {
       y: this.canvas.height * 0.37,
     };
 
-    this.leftGuide;
-    this.rightGuide;
+    this.hitCounter = 0;
+    this.hitMax = 100;
   };
 
   /**
@@ -176,11 +175,12 @@ class Tombola {
    */
   refreshBall() {
     this.ballSpeed = 3;
-    this.move.x = this.ballSpeed;
     // Start at a random angle
-    this.move.y = -this.ballSpeed * this.randomAngle();
+    this.move.x = this.ballSpeed * this.randomAngle();
+    this.move.y = -this.ballSpeed;
 
     // console.log(this.move.y);
+    this.hitCounter = 0;
     this.ballRefreshing = false;
   }
 
@@ -189,7 +189,7 @@ class Tombola {
    * @return {*}
    */
   randomAngle() {
-    return Math.cos((Math.PI / 180) * ((90 * (Math.random())) - 45));
+    return (Math.PI / 180) * ((90 * (Math.random())) - 45);
   }
 
   /**
@@ -270,12 +270,12 @@ class Tombola {
         this.ball.x < this.paddleX + this.paddleWidth) {
       // this.moveY = -this.moveY;
 
-      const angle = (Math.PI/180) * 120 *
-        ((this.paddleCenter - this.ball.x)/ this.paddleWidth);
+      // const angle = (Math.PI/180) * 120 *
+      //   ((this.paddleCenter - this.ball.x)/ this.paddleWidth);
 
-      this.ballSpeed += 0.2;
-      this.move.y = -this.ballSpeed * Math.cos(angle);
-      this.move.x = -this.ballSpeed * Math.sin(angle);
+      // this.ballSpeed += 0.2;
+      // this.move.y = -this.ballSpeed * Math.cos(angle);
+      // this.move.x = -this.ballSpeed * Math.sin(angle);
     } else if (this.ball.y + this.move.y >
       (this.canvas.height - this.ballRadius)) {
       // if at the bottom, reset
@@ -361,6 +361,7 @@ class Tombola {
           closest.x, closest.y);
       if (distance < this.ballRadius) {
         if (this.panelsHit[index] == 0) {
+          this.ballSpeed += 0.01;
           this.move.y = -this.move.y;
           this.move.x = -this.move.x * this.randomAngle();
           // console.log(`Move x after hit: ${this.move.x}`);
@@ -400,6 +401,25 @@ class Tombola {
   panelHit(panel) {
     console.debug('You hit panel ', panel);
     this.flashPanel(panel);
+    this.hitLimiter();
+  }
+
+  /**
+   *
+   */
+  hitLimiter() {
+    this.hitCounter += 1;
+
+    if (this.hitCounter > this.hitMax) {
+      this.ball.x = this.paddleCenter;
+      this.ball.y = this.paddleY - this.ballRadius;
+      this.ballStopped = true;
+      this.ballRefreshing = true;
+      this.move.x = this.ballSpeed;
+      this.move.y = -this.ballSpeed;
+
+      setTimeout(this.refreshBall.bind(this), this.refreshTime);
+    }
   }
 
   /**

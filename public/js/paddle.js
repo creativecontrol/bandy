@@ -85,6 +85,9 @@ class Paddle {
       ((this.numberOfBlocks-1)*this.blockSpacing);
     this.blocksLeft = (this.canvas.width - this.blocksWidth) / 2;
     this.blocksY = 40;
+
+    this.hitCounter = 0;
+    this.hitMax = 100;
   }
 
   /**
@@ -170,11 +173,20 @@ class Paddle {
    */
   refreshBall() {
     this.ballSpeed = 3;
-    this.moveX = this.ballSpeed;
     // Start at a random angle
-    this.moveY = -this.ballSpeed * Math.cos((Math.PI / 180) *
-      ((90 * (Math.random())) - 45));
+    this.move.x = this.ballSpeed * this.randomAngle();
+    this.move.y = -this.ballSpeed;
+
+    this.hitCounter = 0;
     this.ballRefreshing = false;
+  }
+
+  /**
+   *
+   * @return {*}
+   */
+  randomAngle() {
+    return (Math.PI / 180) * ((90 * (Math.random())) - 45);
   }
 
   /**
@@ -300,6 +312,25 @@ class Paddle {
   blockHit(block) {
     console.debug('You hit block ', block);
     this.flashBlock(block);
+    this.hitLimiter();
+  }
+
+  /**
+   *
+   */
+  hitLimiter() {
+    this.hitCounter += 1;
+
+    if (this.hitCounter > this.hitMax) {
+      this.ball.x = this.paddleCenter;
+      this.ball.y = this.paddleY - this.ballRadius;
+      this.ballStopped = true;
+      this.ballRefreshing = true;
+      this.move.x = this.ballSpeed;
+      this.move.y = -this.ballSpeed;
+
+      setTimeout(this.refreshBall.bind(this), this.refreshTime);
+    }
   }
 
   /**

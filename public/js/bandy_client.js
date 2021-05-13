@@ -48,11 +48,13 @@ class BandyClient {
     this.helpURL = document.querySelector('#helpURL');
 
     this.splash = document.querySelector('.splash');
+    this.join = document.querySelector('.join');
     this.gameChoice = document.querySelector('.gameChoice');
     this.game = document.querySelector('.loaded');
     this.instructions = document.querySelector('#instructions');
     this.showInstructionsAction = document.querySelector('#showInstructions');
 
+    this.instructButtonAction = document.querySelector('#instructButton');
     this.joinButtonAction = document.querySelector('#joinButton');
     this.splashNoEvent = document.querySelector('.splash-noevent');
     this.splashLive = document.querySelector('.splash-live');
@@ -175,9 +177,17 @@ class BandyClient {
     console.log('starting run');
     window.addEventListener('resize', this.resizeCanvas.bind(this));
 
+    this.instructButtonAction.onclick = () => {
+      this.splash.hidden = true;
+      this.join.hidden = false;
+      this.gameChoice.hidden = true;
+      this.game.hidden = true;
+    };
+
     this.joinButtonAction.onclick = () => {
       this.createNewPlayerEntry();
       this.splash.hidden = true;
+      this.join.hidden = true;
       this.gameChoice.hidden = false;
       this.game.hidden = true;
     };
@@ -190,6 +200,7 @@ class BandyClient {
       this.addInitialStat();
 
       this.splash.hidden = true;
+      this.join.hidden = true;
       this.gameChoice.hidden = true;
       this.game.hidden = false;
       this.tombolaGame.setInstructions();
@@ -202,6 +213,7 @@ class BandyClient {
 
       this.paddleRadioAction.checked = true;
       this.splash.hidden = true;
+      this.join.hidden = true;
       this.gameChoice.hidden = true;
       this.game.hidden = false;
       this.paddleGame.setInstructions();
