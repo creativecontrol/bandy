@@ -5,6 +5,20 @@
   "hosting": {
     "site": "bandycamp",
     "public": "public",
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/performer",
+        "destination": "/performer.html"
+      },
+      {
+        "source": "/controller",
+        "destination": "/controller.html"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",

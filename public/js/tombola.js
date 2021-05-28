@@ -1,7 +1,7 @@
 /**
- *
+ * Tombola game
  */
-class Tombola {
+class Tombola { // eslint-disable-line no-unused-vars
   /**
    *
    * @param {*} _canvas
@@ -21,7 +21,9 @@ class Tombola {
       Use the Info Button above for Help </br>
       `;
 
-    this.paddleColor = '#333333';//'#EBEBEB';
+    // Hide the paddle in the background.
+    // It is only used as a ball starting position.
+    this.paddleColor = '#333333';
     this.paddleWidthScreenPortion = 0.2;
     this.paddleWidth = this.canvas.width*this.paddleWidthScreenPortion;
     this.paddleHeight = 15;
@@ -98,7 +100,7 @@ class Tombola {
   };
 
   /**
-   * 
+   *
    */
   setInstructions() {
     this.parent.instructions.innerHTML = this.instructionText;
@@ -230,20 +232,22 @@ class Tombola {
       this.context.beginPath();
       this.context.save();
       this.context.translate(panelCenter.x, panelCenter.y);
-      this.context.rotate(degToRad(this.panelRotations[index] + this.tombolaRotation));
+      this.context.rotate(degToRad(this.panelRotations[index] +
+        this.tombolaRotation));
       this.context.translate(-panelCenter.x, -panelCenter.y);
       this.context.fillStyle = this.panelColors[index][this.panelsHit[index]];
       this.context.fillRect(panelCenter.x - this.panelSize.w/2,
           panelCenter.y - this.panelSize.h/2,
           this.panelSize.w, this.panelSize.h);
       if (this.panelsHit[index]) {
-        this.context.strokeStyle = this.panelColors[index][this.panelsHit[index]];
+        this.context.strokeStyle =
+          this.panelColors[index][this.panelsHit[index]];
         this.context.lineWidth = 5;
         this.context.strokeRect(panelCenter.x - this.panelSize.w/2,
             panelCenter.y - this.panelSize.h/2,
             this.panelSize.w, this.panelSize.h);
       }
-      
+
       this.context.closePath();
       this.context.restore();
     });
@@ -330,7 +334,10 @@ class Tombola {
       // this.context.stroke();
       // this.context.closePath();
 
-      // Closest point in the rectangle to the center of circle rotated backwards(unrotated)
+      /*
+       * Closest point in the rectangle to
+       * the center of circle rotated backwards(unrotated)
+       */
       const closest = {
         x: 0,
         y: 0,
@@ -394,10 +401,10 @@ class Tombola {
 
   // };
 
-   /**
- *
- * @param {int} block
- */
+  /**
+   *
+   * @param {int} panel
+   */
   panelHit(panel) {
     console.debug('You hit panel ', panel);
     this.flashPanel(panel);
@@ -424,7 +431,7 @@ class Tombola {
 
   /**
    *
-   * @param {int} block
+   * @param {int} panel
    */
   flashPanel(panel) {
     this.panelsHit[panel] = 1;

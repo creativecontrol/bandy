@@ -1,11 +1,12 @@
 /**
  * Paddle Game
  */
-class Paddle {
+class Paddle { // eslint-disable-line no-unused-vars
   /**
    *
    * @param {*} _canvas
    * @param {*} _context
+   * @param {*} _parent
    */
   constructor(_canvas, _context, _parent) {
     this.canvas = _canvas;
@@ -20,7 +21,8 @@ class Paddle {
       </br>
       <strong>Touch Controls:</strong> </br>
       Tap to start the ball. </br>
-      Press to the left or right side of the white platform to move it in that direction. </br>
+      Press to the left or right side of the paddle
+      to move it in that direction. </br>
       </br>
       <strong>Keyboard Controls:</strong> </br>
       Press the spacebar to start the ball. </br>
@@ -141,7 +143,7 @@ class Paddle {
     this.blocksLeft = (this.canvas.width - this.blocksWidth) / 2;
 
 
-    this.clearCanvas();
+    // this.clearCanvas();
   }
 
   /**
@@ -174,8 +176,8 @@ class Paddle {
   refreshBall() {
     this.ballSpeed = 3;
     // Start at a random angle
-    this.move.x = this.ballSpeed * this.randomAngle();
-    this.move.y = -this.ballSpeed;
+    this.moveX = this.ballSpeed * this.randomAngle();
+    this.moveY = -this.ballSpeed;
 
     this.hitCounter = 0;
     this.ballRefreshing = false;

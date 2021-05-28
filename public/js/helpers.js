@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const CONSTANTS = {
   COLORS: ['#EE2B29', '#ff9800', '#ffff00', '#c6ff00', '#00e5ff',
     '#2979ff', '#651fff', '#d500f9'],
@@ -13,7 +12,7 @@ const CONSTANTS = {
 /** ***********************
  * MIDI or Magenta player
  ************************/
-class Player {
+class Player { // eslint-disable-line no-unused-vars
   /**
    *
    */
@@ -149,7 +148,7 @@ class Player {
     const command = msg.data[0];
     const button = msg.data[1];
     // a velocity value might not be included with a noteOff command
-    const velocity = (msg.data.length > 2) ? msg.data[2] : 0;
+    // const velocity = (msg.data.length > 2) ? msg.data[2] : 0;
 
     switch (command) {
       case 0x90: // note on
@@ -165,7 +164,7 @@ class Player {
 /** ***********************
  * Floaty notes
  ************************/
-class FloatyNotes {
+class FloatyNotes { // eslint-disable-line no-unused-vars
   /**
    *
    * @param {*} headerSize
@@ -254,7 +253,7 @@ class FloatyNotes {
 /**
  *
  */
-class Piano {
+class Piano { // eslint-disable-line no-unused-vars
   /**
    *
    */
@@ -430,7 +429,7 @@ class Piano {
    * @param {Boolean} [fill = false] Whether to fill the rectangle.
    * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
    */
-function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+function roundRect(ctx, x, y, width, height, radius, fill, stroke) { // eslint-disable-line no-unused-vars
   if (typeof stroke === 'undefined') {
     stroke = true;
   }
@@ -442,7 +441,9 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   } else {
     const defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
     for (const side in defaultRadius) {
-      radius[side] = radius[side] || defaultRadius[side];
+      if ({}.hasOwnProperty.call(defaultRadius, side)) {
+        radius[side] = radius[side] || defaultRadius[side];
+      }
     }
   }
   ctx.beginPath();
@@ -450,7 +451,8 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
   ctx.lineTo(x + width - radius.tr, y);
   ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
   ctx.lineTo(x + width, y + height - radius.br);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+  ctx.quadraticCurveTo(x + width, y + height,
+      x + width - radius.br, y + height);
   ctx.lineTo(x + radius.bl, y + height);
   ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
   ctx.lineTo(x, y + radius.tl);
@@ -470,7 +472,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
  * @param {number} _theta
  * @return {*}
  */
-function polToCar(_r, _theta) {
+function polToCar(_r, _theta) { // eslint-disable-line no-unused-vars
   const x = _r * Math.cos(degToRad(_theta));
   const y = _r * Math.sin(degToRad(_theta));
 
@@ -482,7 +484,7 @@ function polToCar(_r, _theta) {
  * @param {*} max
  * @return {*}
  */
-function getRandomInt(max) {
+function getRandomInt(max) { // eslint-disable-line no-unused-vars
   return Math.floor(Math.random() * max);
 }
 
@@ -503,7 +505,7 @@ function degToRad(degrees) {
  * @param {*} toY
  * @return {*}
  */
-function findDistance(fromX, fromY, toX, toY) {
+function findDistance(fromX, fromY, toX, toY) { // eslint-disable-line no-unused-vars
   const a = Math.abs(fromX - toX);
   const b = Math.abs(fromY - toY);
 

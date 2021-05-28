@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#333333">
+    <meta name="msapplication-TileColor" content="#333333">
+    <meta name="theme-color" content="#333333">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <title>bandy performer</title>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="/__/firebase/8.3.1/firebase-app.js" defer></script>
+
+    <script src="/__/firebase/8.3.1/firebase-auth.js"defer></script>
+    <script src="/__/firebase/8.3.1/firebase-database.js" defer></script>
+
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js" defer></script>
+
+    <!-- Firebase Auth UI -->
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/performer.css">
+    <script src="https://cdn.jsdelivr.net/npm/webmidi@2.5.2/webmidi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/3.0.9/vexflow-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous"></script>
+    <script src="js/helpers.js" defer></script>
+    <script src="js/instruments.js" defer></script>
+    <script src="js/bandy_performer.js" defer></script>
+</head>
+<body>
+  <div class="header">
+    <div class= "bubble" id="playerCount">Players</div>
+    <div id="title">bandy performer</div>
+    <div class= "bubble" id="settings">Settings</div>
+  </div>
+  <div class="background"></div>
+  <div class="login">
+    <div>
+      Please login with one of the following options so we can store your preferences. <br>
+      No personal information will be shared with anyone.<br>
+      You can also continue as a guest if you don't want to sign in and you will have to set your preferences manually on each visit.
+    </div>
+    <div id="firebaseui-auth-container"></div>
+  </div>
+
+  <div class="setup" hidden>
+    <p>I see you're new here. We need to set up a few things to get you started. Some information was automatically loaded from your login. 
+      Feel free to update it, only you will be seeing this information.<br>
+      You can also update this info at anytime in the Settings menu.
+    </p>
+  </div>
+  <div class="content" hidden>
+    <div id="performerParameters">
+      <div class="performerParameter">
+        <span id="performerName">Name</span>
+      </div>
+      |
+      <div class="performerParameter">
+        <span id="performerInstrument">Instrument</span>
+      </div>
+      <br>
+      <div class="performerParameter">
+        <span id="performerProbability">100%</span>
+      </div>
+      <br>
+      <div class="performerParameter midi" hidden>
+        <label for="midiOutputSelect">MIDI Output</label>
+        <select id = "midiOutputSelect"></select>
+      </div>
+    </div>
+    <canvas id="canvas"></canvas>
+  </div>
+  
+  <div class="dialog" id="settingsBox" hidden>
+    <div>
+      Event URL <span id="eventURL"></span>
+    </div>
+    <div>
+      Project Website <span id="projectWebsite"></span>
+    </div>
+
+    <hr>
+    <div class="settingParam">
+      Performer ID:
+      <input type="text" id="performerId"></select>
+    </div>
+    <div class="settingParam">
+      Instrument type:
+      <select id="instrument"></select>
+    </div>
+    <div class="settingParam">
+      Accidentals preference <br>
+      <div id="" class="centered">
+        <input type="radio" value="sharps" id="apSharpRadio">
+        <label for="apSharpRadio">sharps</label>
+      
+        <input type="radio" value="flats" id="apFlatRadio">
+        <label for="apFlatRadio">flats</label>
+      </div>
+    </div>
+    <div class="settingParam">
+      Note update probability: 
+      <input name="probability" type="number" id="probability">
+    </div>
+
+    <div class="apply">
+      
+      <button class="splash-button small" id="storeSettings">Store Settings</button>
+      <button class="splash-button small" id="closeSettings">Close</button>
+      <button class="splash-button small" id="clearPlayers">Clear Players</button>
+      <button class="splash-button small" id="clearStats">Clear Stats</button>
+    </div>
+  </div>
+    
+</body>
+</html>

@@ -45,7 +45,7 @@ class BandyClient {
     this.eventInfo = document.querySelector('#eventInfo');
     this.eventURL = document.querySelector('#eventURL');
     this.projectWebsite = document.querySelectorAll('#projectWebsite');
-    this.helpURL = document.querySelector('#helpURL');
+    // this.helpURL = document.querySelector('#helpURL');
 
     this.splash = document.querySelector('.splash');
     this.join = document.querySelector('.join');
@@ -121,7 +121,7 @@ class BandyClient {
     this.eventInfoSetting = settings['eventInfo'];
     this.eventURLSetting = settings['eventURL'];
     this.projectWebsiteSetting = settings['projectWebsite'];
-    this.helpURLSetting = settings['helpURL'];
+    // this.helpURLSetting = settings['helpURL'];
 
     this.playerCount.innerText = `Players: ${this.numberOfPlayers}`;
     this.noEventInfo.innerHTML = this.noEventInfoSetting;
@@ -131,7 +131,7 @@ class BandyClient {
     this.projectWebsite.forEach((element) => {
       element.innerHTML = this.projectWebsiteSetting;
     });
-    this.helpURL.innerHTML = this.helpURLSetting;
+    // this.helpURL.innerHTML = this.helpURLSetting;
 
     if (this.isLive) {
       this.splashNoEvent.hidden = true;

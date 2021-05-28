@@ -13,5 +13,9 @@ module.exports = {
     'html',
   ],
   'rules': {
+    'max-len': [2, 80, 4, {
+      'ignoreTrailingComments': true,
+      'ignoreUrls': true,
+    }],
   },
 };

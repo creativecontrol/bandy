@@ -44,6 +44,7 @@ class BandyController {
     this.projectWebsiteSetting = document.querySelector('#projectWebsite');
     this.helpURLSetting = document.querySelector('#helpURL');
     this.roomIsLiveSetting = document.querySelector('#isLive');
+    this.performersOnlineSetting = document.querySelector('#performers');
     this.updateSettingsAction = document.querySelector('#storeSettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
     this.clearStatsAction = document.querySelector('#clearStats');
@@ -55,6 +56,10 @@ class BandyController {
     this.eventInfo = '';
     this.ballSpeed;
     this.isLive;
+    this.performersOnline;
+    this.notesRef;
+    this.notesArray = [];
+    this.notesArrayLength = 20;
 
     this.keyWhitelist;
     this.TEMPERATURE = this.getTemperature();
@@ -130,6 +135,9 @@ class BandyController {
     this.roomIsLiveSetting.onchange = () => {
       this.isLive = this.roomIsLiveSetting.checked;
     };
+    this.performersOnlineSetting.onchange = () => {
+      this.performersOnline = this.performersOnlineSetting.checked;
+    };
     this.clearPlayersAction.onclick = () => {
       this.clearPlayers();
     };
@@ -174,6 +182,8 @@ class BandyController {
       const playerStates = snapshot.val();
       this.applyPlayerStates(playerStates);
     });
+
+    this.notesRef = this.database.ref(`${this.room}/notes/`);
   }
 
   /**
@@ -183,6 +193,7 @@ class BandyController {
   applySettingsFromDatabase(settings) {
     this.ballSpeed = settings['ballStartSpeed'];
     this.isLive = settings['isLive'];
+    this.performersOnline = settings['performersOnline'];
     this.numberOfPlayers = settings['numberOfPlayers'];
     this.noEventInfo = settings['noEventInfo'];
     this.eventInfo = settings['eventInfo'];
@@ -201,6 +212,7 @@ class BandyController {
   copySettingsToUI() {
     this.ballSpeedSetting.value = this.ballSpeed;
     this.roomIsLiveSetting.checked = this.isLive;
+    this.performersOnlineSetting.checked = this.performersOnline;
     this.noEventInfoSetting.value = this.noEventInfo;
     this.eventInfoSetting.value = this.eventInfo;
     this.eventURLSetting.value = this.eventURL;
@@ -281,7 +293,9 @@ class BandyController {
     const changeStatPath = `${this.room}/stats/changeTo/`;
 
     const result =
-      confirm('Are you sure you want to zero out statistics from the database?');
+      confirm(
+          'Are you sure you want to zero out statistics from the database?',
+      );
     if (result) {
       this.database.ref(`${initStatPath}paddle`).set(0);
       this.database.ref(`${initStatPath}tombola`).set(0);
@@ -305,9 +319,36 @@ class BandyController {
           'projectWebsite': this.projectWebsite,
           'helpURL': this.helpURL,
           'isLive': this.isLive,
+          'performersOnline': this.performersOnline,
         },
     );
   }
+
+  /**
+   * Store genie created MIDI pitch back to the database for performers to use
+   * This acts as a FIFO of length this.notesArrayLength
+   * @param {*} pitch
+   */
+  noteStore(pitch) {
+    this.notesArray.push(pitch);
+    if (this.notesArray.length > this.notesArrayLength) {
+      this.notesArray.shift();
+    }
+
+    this.notesRef.set(this.notesArray);
+  }
+
+  /**
+   * Remove first instance of this pitch from the database array
+   * @param {*} pitch
+   */
+  noteClear(pitch) {
+    const clearNote = _.find(this.notesArray, ['midiNote', pitch]);
+    console.log(clearNote.id);
+    clearNote.id.remove();
+    _.pull(this.notesArray, clearNote);
+  }
+
 
   /**
    *
@@ -332,6 +373,9 @@ class BandyController {
 
     // Hear it.
     this.player.playNoteDown(pitch, button);
+    if (this.performersOnline) {
+      this.noteStore(pitch);
+    }
 
     // See it.
     const rect = this.piano.highlightNote(note, button);
@@ -369,6 +413,10 @@ class BandyController {
       const pitch = CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE + thing.note;
       if (!this.sustaining) {
         this.player.playNoteUp(pitch, button);
+
+        // if (this.performersOnline) {
+        //   this.noteClear(pitch);
+        // }
       } else {
         this.sustainingNotes.push(CONSTANTS.LOWEST_PIANO_KEY_MIDI_NOTE +
           thing.note);
