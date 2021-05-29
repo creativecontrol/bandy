@@ -52,12 +52,6 @@
     <div id="firebaseui-auth-container"></div>
   </div>
 
-  <div class="setup" hidden>
-    <p>I see you're new here. We need to set up a few things to get you started. Some information was automatically loaded from your login. 
-      Feel free to update it, only you will be seeing this information.<br>
-      You can also update this info at anytime in the Settings menu.
-    </p>
-  </div>
   <div class="content" hidden>
     <div id="performerParameters">
       <div class="performerParameter">
@@ -79,6 +73,15 @@
     </div>
     <canvas id="canvas"></canvas>
   </div>
+
+  <div class="setup" hidden>
+    <div id="setup1">I see you're new here. We need to set up a few things to get you started.</div>
+    <div id="setup2">Some information was automatically loaded from your login.</div>
+    <div id="setup3">Feel free to update it, only you will be seeing this information.</div>
+    <div id="setup3">You can also update this info at anytime by opening the Settings menu again.</div>
+
+    <button class="splash-button small" id="setupConfirm">Let's go !</button>
+  </div>
   
   <div class="dialog" id="settingsBox" hidden>
     <div>
@@ -90,34 +93,62 @@
 
     <hr>
     <div class="settingParam">
-      Performer ID:
-      <input type="text" id="performerId"></select>
+      Performer Name
+      <input type="text" id="nameSetting">
     </div>
     <div class="settingParam">
-      Instrument type:
-      <select id="instrument"></select>
+      Instrument type
+      <select id="instrumentSetting"></select>
     </div>
+    <div class="settingParam">
+      Instrument clef
+      <select id="clefSetting"></select>
+    </div>
+    <div class="settingParam horiz">
+      Range
+      <label for="rangeLowSetting">Low</label>
+      <select id="rangeLowSetting"></select>
+      
+      <label for="rangeHighSetting">High</label>
+      <select id="rangeHighSetting"></select>
+    </div>
+    <div class="settingParam">
+      <label for="transpositionSetting">Transposition</label>
+      <select id="transpositionSetting"></select>
+    </div>
+
     <div class="settingParam">
       Accidentals preference <br>
-      <div id="" class="centered">
-        <input type="radio" value="sharps" id="apSharpRadio">
+      <div id="" class="centered radioSet">
+        <input type="radio" value="sharps" id="apSharpRadio" name="accidentals">
         <label for="apSharpRadio">sharps</label>
       
-        <input type="radio" value="flats" id="apFlatRadio">
+        <input type="radio" value="flats" id="apFlatRadio" name="accidentals">
         <label for="apFlatRadio">flats</label>
       </div>
     </div>
     <div class="settingParam">
-      Note update probability: 
-      <input name="probability" type="number" id="probability">
+      Number of Notes to display <br>
+      <div id="" class="centered radioSet">
+        <input type="radio" value="5" id="non5Radio" name="numberOfNotes">
+        <label for="non5Radio">5</label>
+      
+        <input type="radio" value="6" id="non6Radio" name="numberOfNotes">
+        <label for="non6Radio">6</label>
+
+        <input type="radio" value="7" id="non7Radio" name="numberOfNotes">
+        <label for="non7Radio">7</label>
+      </div>
+    </div>
+    <div class="settingParam horiz">
+      <label for="probabilitySetting">Note update probability percentage</label>
+      <input name="probability" type="number" id="probabilitySetting" min="5" max="100" step="5">
     </div>
 
     <div class="apply">
       
       <button class="splash-button small" id="storeSettings">Store Settings</button>
       <button class="splash-button small" id="closeSettings">Close</button>
-      <button class="splash-button small" id="clearPlayers">Clear Players</button>
-      <button class="splash-button small" id="clearStats">Clear Stats</button>
     </div>
   </div>
     

@@ -1,5 +1,6 @@
 /**
- * TODO:
+ * @todo add ability to clear notes from database
+ * @todo add tabs to the settings pane https://www.w3schools.com/howto/howto_js_tabs.asp
  *
  */
 

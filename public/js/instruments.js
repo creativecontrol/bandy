@@ -7,6 +7,18 @@ const NOTES = { // eslint-disable-line no-unused-vars
   flats: ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'],
 };
 
+const ENTIRE_NOTE_RANGE = [ // eslint-disable-line no-unused-vars
+  'a0', 'a#0', 'b0',
+  'c1', 'c#1', 'd1', 'd#1', 'e1', 'f1', 'f#1', 'g1', 'g#1', 'a1', 'a#1', 'b1',
+  'c2', 'c#2', 'd2', 'd#2', 'e2', 'f2', 'f#2', 'g2', 'g#2', 'a2', 'a#2', 'b2',
+  'c3', 'c#3', 'd3', 'd#3', 'e3', 'f3', 'f#3', 'g3', 'g#3', 'a3', 'a#3', 'b3',
+  'c4', 'c#4', 'd4', 'd#4', 'e4', 'f4', 'f#4', 'g4', 'g#4', 'a4', 'a#4', 'b4',
+  'c5', 'c#5', 'd5', 'd#5', 'e5', 'f5', 'f#5', 'g5', 'g#5', 'a5', 'a#5', 'b5',
+  'c6', 'c#6', 'd6', 'd#6', 'e6', 'f6', 'f#6', 'g6', 'g#6', 'a6', 'a#6', 'b6',
+  'c7', 'c#7', 'd7', 'd#7', 'e7', 'f7', 'f#7', 'g7', 'g#7', 'a7', 'a#7', 'b7',
+  'c8',
+];
+
 /**
  * RESTNOTE is the center line of a stave where a rest should be positioned
  * Organized by clef
@@ -32,13 +44,11 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
   violin: {
     range: {
       low: {
-        note: 'g',
-        octave: 3,
+        noteName: 'g3',
         midiNote: 55,
       },
       high: {
-        note: 'a',
-        octave: 7,
+        noteName: 'a7',
         midiNote: 105,
       },
     },
@@ -49,13 +59,11 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
   viola: {
     range: {
       low: {
-        note: 'c',
-        octave: 3,
+        noteName: 'c3',
         midiNote: 48,
       },
       high: {
-        note: 'e',
-        octave: 6,
+        noteName: 'e6',
         midiNote: 88,
       },
     },
@@ -66,13 +74,11 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
   cello: {
     range: {
       low: {
-        note: 'c',
-        octave: 2,
+        noteName: 'c2',
         midiNote: 36,
       },
       high: {
-        note: 'c',
-        octave: 6,
+        noteName: 'c6',
         midiNote: 84,
       },
     },
@@ -83,13 +89,11 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
   bass: {
     range: {
       low: {
-        note: 'e',
-        octave: 2,
+        noteName: 'e2',
         midiNote: 40,
       },
       high: {
-        note: 'c',
-        octave: 5,
+        noteName: 'c5',
         midiNote: 72,
       },
     },
@@ -100,13 +104,11 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
   guitar: {
     range: {
       low: {
-        note: 'e',
-        octave: 3,
+        noteName: 'e3',
         midiNote: 52,
       },
       high: {
-        note: 'b',
-        octave: 5,
+        noteName: 'b5',
         midiNote: 83,
       },
     },
@@ -114,4 +116,19 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     accidentals: 'sharps',
     transposition: 'none',
   },
+  custom: {
+    range: {
+      low: {
+        noteName: '',
+        midiNote: 0,
+      },
+      high: {
+        noteName: '',
+        midiNote: 0,
+      },
+    },
+    clef: '',
+    accidentals: 'sharps',
+    transposition: 'none',
+  }
 };
