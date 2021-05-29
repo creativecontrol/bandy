@@ -594,6 +594,7 @@ class BandyPerformer {
   /**
    *
    * @param {*} settings
+   * @param {*} updateSettings
    */
   applyPerformerSettingsFromDatabase(settings, updateSettings=false) {
     // update local variables

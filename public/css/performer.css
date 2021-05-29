@@ -413,10 +413,6 @@ label.radio > .control-indicator {
   float: right;
 }
 
-.horiz {
-  
-}
-
 .horiz input {
   display: inline-block;
   width: 150px;

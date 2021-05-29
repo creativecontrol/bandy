@@ -130,5 +130,5 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     clef: '',
     accidentals: 'sharps',
     transposition: 'none',
-  }
+  },
 };
