@@ -3,7 +3,6 @@
  * @todo add a check that high range is higher than low range and alert if it isn't when either is changed
  * @todo Adjust CSS for better spacing of UI elements (more padding)
  * @todo move MIDI UI stuff to a new class
- * @todo allow performer to switch between transposed and dropped out of range notes
  */
 
 console.debugging = false;
@@ -55,11 +54,15 @@ class BandyPerformer {
     this.performerRangeHighSetting =
       document.querySelector('#rangeHighSetting');
     this.performerAccidentalSetting;
+    this.performerOutOfRangeSetting;
     this.performerNoteNumberSetting;
 
     this.accidentalsAction = document.getElementsByName('accidentals');
     this.sharpsRadio = document.querySelector('#apSharpRadio');
     this.flatsRadio = document.querySelector('#apFlatRadio');
+    this.outOfRangeAction = document.getElementsByName('outOfRange');
+    this.outOfRangeFitRadio = document.querySelector('#outOfRangeFit');
+    this.outOfRangeIgnoreRadio = document.querySelector('#outOfRangeIgnore');
     this.numberOfNotesAction = document.getElementsByName('numberOfNotes');
     this.non5Radio = document.querySelector('#non5Radio');
     this.non6Radio = document.querySelector('#non6Radio');
@@ -89,12 +92,12 @@ class BandyPerformer {
     this.databaseNotes;
 
     this.performerName = '';
-    this.accidentalPreference = 'sharps';
+    this.accidentalPreference;
     this.numberOfNotes = 6;
     this.noteLength = 'q';
-    this.instrumentName = 'violin';
-    this.instrumentClef = 'treble';
-    this.instrumentTransposition = 'none';
+    this.instrumentName;
+    this.instrumentClef;
+    this.instrumentTransposition;
     this.instrumentRange = {
       low: {
         noteName: 'g3',
@@ -106,7 +109,7 @@ class BandyPerformer {
       },
     };
     this.probability = 1.0;
-    this.fitNotesToRange = true;
+    this.outOfRangeNotes = 'fit';
     this.noteData = [];
     this.currentMidiOutput = '';
     this.lastNoteUpdate = [];
@@ -171,6 +174,7 @@ class BandyPerformer {
           if (snapshot.exists()) {
             console.debug('performer exists');
             this.contentUI.hidden = false;
+            this.buildInstrumentSettings();
             this.connectToBandySettings()
                 .then(() => {
                   return this.connectToPerformerSettings(true);
@@ -189,6 +193,7 @@ class BandyPerformer {
             this.setupUICompleteAction.onclick = () => {
               this.setupUI.hidden = true;
               this.contentUI.hidden = false;
+              this.buildInstrumentSettings();
               this.settingsModal.hidden = false;
               this.connectToBandySettings()
                   .then(() => {
@@ -243,9 +248,6 @@ class BandyPerformer {
    * Initialize UIs and listeners.
    */
   run() {
-    // Settings
-    this.buildInstrumentSettings();
-
     // draw the UI
     this.setCanvasSize();
     this.setNotationSize();
@@ -268,13 +270,23 @@ class BandyPerformer {
       this.settingsModal.hidden = !this.settingsModal.hidden;
     };
 
-    this.accidentalsAction.onclick = (event) => {
-      this.performerAccidentalSetting = event.currentTarget.value;
-    };
+    this.accidentalsAction.forEach((element) => {
+      element.onclick = (event) => {
+        this.performerAccidentalSetting = event.currentTarget.value;
+      };
+    });
 
-    this.numberOfNotesAction.onclick = (event) => {
-      this.performerNoteNumberSetting = event.currentTarget.value;
-    };
+    this.outOfRangeAction.forEach((element) => {
+      element.onclick = (event) => {
+        this.performerOutOfRangeSetting = event.currentTarget.value;
+      };
+    });
+
+    this.numberOfNotesAction.forEach((element) => {
+      element.onclick = (event) => {
+        this.performerNoteNumberSetting = event.currentTarget.value;
+      };
+    });
 
     this.performerInstrumentNameSetting.onchange = () => {
       const instrument = this.performerInstrumentNameSetting.value;
@@ -555,7 +567,7 @@ class BandyPerformer {
 
         if (note >= lowRange && note <= highRange ) {
           filteredNotes.push(note);
-        } else if (this.fitNotesToRange) {
+        } else if (this.outOfRangeNotes == 'fit') {
           let newNote = note;
           const potentialNewNotes =[];
           let direction;
@@ -705,6 +717,8 @@ class BandyPerformer {
         settings.transposition ? settings.transposition : '';
       this.accidentalPreference =
         settings.accidentals ? settings.accidentals : 'sharps';
+      this.outOfRangeNotes =
+        settings.outOfRangeNotes ? settings.outOfRangeNotes : 'fit';
       this.numberOfNotes = settings.numberOfNotes ? settings.numberOfNotes : 6;
       this.probability = settings.probability ? settings.probability : 1.0;
 
@@ -748,6 +762,19 @@ class BandyPerformer {
             this.sharpsRadio.checked = true;
             break;
         }
+        this.performerOutOfRangeSetting = this.outOfRangeNotes;
+        switch (this.performerOutOfRangeSetting) {
+          case 'fit':
+            this.outOfRangeFitRadio.checked = true;
+            break;
+          case 'ignore':
+            this.outOfRangeIgnoreRadio.checked = true;
+            break;
+          default:
+            this.outOfRangeFitRadio.checked = true;
+            break;
+        }
+
         this.performerNoteNumberSetting = this.numberOfNotes;
         switch (this.performerNoteNumberSetting) {
           case 5:
@@ -763,7 +790,8 @@ class BandyPerformer {
             this.non6Radio.checked = true;
             break;
         }
-        this.performerProbabilitySetting.value = this.probability * 100;
+        this.performerProbabilitySetting.value =
+          Math.trunc(this.probability * 100);
       }
       resolve();
     });
@@ -812,6 +840,7 @@ class BandyPerformer {
           },
           accidentalPreference: this.performerAccidentalSetting,
           numberOfNotes: this.performerNoteNumberSetting,
+          outOfRangeNotes: this.performerOutOfRangeSetting,
           probability: this.performerProbabilitySetting.value * 0.01,
         })
         .then(() => {
