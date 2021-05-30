@@ -299,6 +299,7 @@ button.splash-button.small {
 
 .dialog select option {
   background: #333333;
+  padding-left: 10px;
 }
 
 .dialog .settingParam {
@@ -311,10 +312,29 @@ button.splash-button.small {
 }
 
 .dialog input {
-  width: 100%;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  border: none;
+  border-bottom: 2px solid #C77C7C;
+  background: transparent;
+  box-shadow: none;
+  margin-bottom: 6px;
+  height: 25px;
+  width: 75%;
+}
+
+.dialog input[type=number] {
+  caret-color: #C77C7C;
+}
+
+.dialog input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+  caret-color: #C77C7C;
 }
 
 .dialog label {
+  width: 100px;
   margin-right: 4px;
   margin-bottom: 5px;
 }

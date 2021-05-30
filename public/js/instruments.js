@@ -29,6 +29,40 @@ const ENTIRE_NOTE_RANGE = [ // eslint-disable-line no-unused-vars
 ];
 
 /**
+ * An array of possible transpositions
+ * @constant
+ * @type {Object[]}
+ * @default [{semitones: <number>, interval: <string>}]
+ */
+const TRANSPOSITIONS = [ // eslint-disable-line no-unused-vars
+  {semitones: 12, interval: 'P8'},
+  {semitones: 11, interval: 'M7'},
+  {semitones: 10, interval: 'm7'},
+  {semitones: 9, interval: 'M6'},
+  {semitones: 8, interval: 'm6'},
+  {semitones: 7, interval: 'P5'},
+  {semitones: 6, interval: 'TT'},
+  {semitones: 5, interval: 'P4'},
+  {semitones: 4, interval: 'M3'},
+  {semitones: 3, interval: 'm3'},
+  {semitones: 2, interval: 'M2'},
+  {semitones: 1, interval: 'm2'},
+  {semitones: 0, interval: 'P1'},
+  {semitones: -1, interval: 'm2'},
+  {semitones: -2, interval: 'M2'},
+  {semitones: -3, interval: 'm3'},
+  {semitones: -4, interval: 'M3'},
+  {semitones: -5, interval: 'P4'},
+  {semitones: -6, interval: 'TT'},
+  {semitones: -7, interval: 'P5'},
+  {semitones: -8, interval: 'm6'},
+  {semitones: -9, interval: 'M6'},
+  {semitones: -10, interval: 'm7'},
+  {semitones: -11, interval: 'M7'},
+  {semitones: -12, interval: 'P8'},
+];
+
+/**
  * RESTNOTE is the center line of a stave where a quarter rest should be positioned.
  * Organized by clef.
  *  @constant
@@ -51,12 +85,6 @@ const RESTNOTE = { // eslint-disable-line no-unused-vars
  * @default
  */
 const INSTRUMENTS = { // eslint-disable-line no-unused-vars
-  midi: {
-    range: 'all',
-    clef: 'none',
-    accidentals: 'none',
-    transposition: 'none',
-  },
   violin: {
     range: {
       low: {
@@ -70,7 +98,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   viola: {
     range: {
@@ -85,7 +113,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'alto',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   cello: {
     range: {
@@ -100,7 +128,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'bass',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   bass: {
     range: {
@@ -115,7 +143,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'subbass',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   guitar: {
     range: {
@@ -130,21 +158,36 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
+  },
+  midi: {
+    range: {
+      low: {
+        noteName: 'a0',
+        midiNote: 21,
+      },
+      high: {
+        noteName: 'c8',
+        midiNote: 108,
+      },
+    },
+    clef: 'none',
+    accidentals: 'sharps',
+    transposition: 0,
   },
   custom: {
     range: {
       low: {
-        noteName: '',
-        midiNote: 0,
+        noteName: 'a0',
+        midiNote: 21,
       },
       high: {
-        noteName: '',
-        midiNote: 0,
+        noteName: 'c8',
+        midiNote: 108,
       },
     },
-    clef: '',
+    clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
 };

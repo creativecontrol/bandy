@@ -57,6 +57,40 @@ const ENTIRE_NOTE_RANGE = [ // eslint-disable-line no-unused-vars
 ];
 
 /**
+ * An array of possible transpositions
+ * @constant
+ * @type {Object[]}
+ * @default [{semitones: &lt;number>, interval: &lt;string>}]
+ */
+const TRANSPOSITIONS = [ // eslint-disable-line no-unused-vars
+  {semitones: 12, interval: 'P8'},
+  {semitones: 11, interval: 'M7'},
+  {semitones: 10, interval: 'm7'},
+  {semitones: 9, interval: 'M6'},
+  {semitones: 8, interval: 'm6'},
+  {semitones: 7, interval: 'P5'},
+  {semitones: 6, interval: 'TT'},
+  {semitones: 5, interval: 'P4'},
+  {semitones: 4, interval: 'M3'},
+  {semitones: 3, interval: 'm3'},
+  {semitones: 2, interval: 'M2'},
+  {semitones: 1, interval: 'm2'},
+  {semitones: 0, interval: 'P1'},
+  {semitones: -1, interval: 'm2'},
+  {semitones: -2, interval: 'M2'},
+  {semitones: -3, interval: 'm3'},
+  {semitones: -4, interval: 'M3'},
+  {semitones: -5, interval: 'P4'},
+  {semitones: -6, interval: 'TT'},
+  {semitones: -7, interval: 'P5'},
+  {semitones: -8, interval: 'm6'},
+  {semitones: -9, interval: 'M6'},
+  {semitones: -10, interval: 'm7'},
+  {semitones: -11, interval: 'M7'},
+  {semitones: -12, interval: 'P8'},
+];
+
+/**
  * RESTNOTE is the center line of a stave where a quarter rest should be positioned.
  * Organized by clef.
  *  @constant
@@ -79,12 +113,6 @@ const RESTNOTE = { // eslint-disable-line no-unused-vars
  * @default
  */
 const INSTRUMENTS = { // eslint-disable-line no-unused-vars
-  midi: {
-    range: 'all',
-    clef: 'none',
-    accidentals: 'none',
-    transposition: 'none',
-  },
   violin: {
     range: {
       low: {
@@ -98,7 +126,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   viola: {
     range: {
@@ -113,7 +141,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'alto',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   cello: {
     range: {
@@ -128,7 +156,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'bass',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   bass: {
     range: {
@@ -143,7 +171,7 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'subbass',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
   guitar: {
     range: {
@@ -158,22 +186,37 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
     },
     clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
+  },
+  midi: {
+    range: {
+      low: {
+        noteName: 'a0',
+        midiNote: 21,
+      },
+      high: {
+        noteName: 'c8',
+        midiNote: 108,
+      },
+    },
+    clef: 'none',
+    accidentals: 'sharps',
+    transposition: 0,
   },
   custom: {
     range: {
       low: {
-        noteName: '',
-        midiNote: 0,
+        noteName: 'a0',
+        midiNote: 21,
       },
       high: {
-        noteName: '',
-        midiNote: 0,
+        noteName: 'c8',
+        midiNote: 108,
       },
     },
-    clef: '',
+    clef: 'treble',
     accidentals: 'sharps',
-    transposition: 'none',
+    transposition: 0,
   },
 };
 </code></pre>
@@ -186,13 +229,13 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BandyClient.html">BandyClient</a></li><li><a href="BandyController.html">BandyController</a></li><li><a href="BandyPerformer.html">BandyPerformer</a></li><li><a href="FloatyNotes.html">FloatyNotes</a></li><li><a href="Paddle.html">Paddle</a></li><li><a href="Piano.html">Piano</a></li><li><a href="Player.html">Player</a></li><li><a href="Tombola.html">Tombola</a></li></ul><h3>Global</h3><ul><li><a href="global.html#degToRad">degToRad</a></li><li><a href="global.html#ENTIRE_NOTE_RANGE">ENTIRE_NOTE_RANGE</a></li><li><a href="global.html#findDistance">findDistance</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#INSTRUMENTS">INSTRUMENTS</a></li><li><a href="global.html#MAPPING_4">MAPPING_4</a></li><li><a href="global.html#MAPPING_8">MAPPING_8</a></li><li><a href="global.html#NOTES">NOTES</a></li><li><a href="global.html#OCTAVES">OCTAVES</a></li><li><a href="global.html#OFF">OFF</a></li><li><a href="global.html#ON">ON</a></li><li><a href="global.html#polToCar">polToCar</a></li><li><a href="global.html#RESTNOTE">RESTNOTE</a></li><li><a href="global.html#roundRect">roundRect</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BandyClient.html">BandyClient</a></li><li><a href="BandyController.html">BandyController</a></li><li><a href="BandyPerformer.html">BandyPerformer</a></li><li><a href="FloatyNotes.html">FloatyNotes</a></li><li><a href="Paddle.html">Paddle</a></li><li><a href="Piano.html">Piano</a></li><li><a href="Player.html">Player</a></li><li><a href="Tombola.html">Tombola</a></li></ul><h3>Global</h3><ul><li><a href="global.html#degToRad">degToRad</a></li><li><a href="global.html#ENTIRE_NOTE_RANGE">ENTIRE_NOTE_RANGE</a></li><li><a href="global.html#findDistance">findDistance</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#INSTRUMENTS">INSTRUMENTS</a></li><li><a href="global.html#MAPPING_4">MAPPING_4</a></li><li><a href="global.html#MAPPING_8">MAPPING_8</a></li><li><a href="global.html#NOTES">NOTES</a></li><li><a href="global.html#OCTAVES">OCTAVES</a></li><li><a href="global.html#OFF">OFF</a></li><li><a href="global.html#ON">ON</a></li><li><a href="global.html#polToCar">polToCar</a></li><li><a href="global.html#RESTNOTE">RESTNOTE</a></li><li><a href="global.html#roundRect">roundRect</a></li><li><a href="global.html#TRANSPOSITIONS">TRANSPOSITIONS</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 29 2021 17:35:17 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 29 2021 21:19:33 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

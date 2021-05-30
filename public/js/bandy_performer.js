@@ -1,8 +1,7 @@
 /**
  * bandy Performer
- * @todo add a check that high range is higher than low range and alert if it isn't
- * @todo autofill instrument params when selecting a new instrument
- * @todo add CSS for entry fields so they match style
+ * @todo add a check that high range is higher than low range and alert if it isn't when either is changed
+ * @todo Adjust CSS for better spacing of UI elements (more padding)
  * @todo move MIDI UI stuff to a new class
  */
 
@@ -264,6 +263,19 @@ class BandyPerformer {
       this.performerNoteNumberSetting = event.currentTarget.value;
     };
 
+    this.performerInstrumentNameSetting.onchange = () => {
+      const instrument = this.performerInstrumentNameSetting.value;
+      this.fillDefaultInstrumentData(instrument);
+    };
+
+    this.performerRangeLowSetting.onchange = () => {
+      this.checkNoteRange();
+    };
+
+    this.performerRangeHighSetting.onchange = () => {
+      this.checkNoteRange();
+    };
+
     window.onresize = () => {
       this.onWindowResize();
     };
@@ -362,7 +374,8 @@ class BandyPerformer {
    * @param {number} _note
    */
   addNote(_note) {
-    const newNote = this.getNoteNameAndOctave(_note);
+    const newNote = this.getNoteNameAndOctave(_note +
+      this.instrumentTansposition);
     console.debug(`new note: ${newNote}`);
     const newNoteFormat = {
       clef: this.instrumentClef,
@@ -464,12 +477,10 @@ class BandyPerformer {
       // filter for range and transposition
       if (potentialNewNotes.length > 0) {
         potentialNewNotes = this.rangeFilter(potentialNewNotes);
-        if (this.instrumentTransposition &&
-          this.instrumentTransposition != 'none') {
-          // transpose the notes appropriately
+        if (this.instrumentTransposition != 0) {
+          potentialNewNotes = this.transposeNotes(potentialNewNotes);
         }
       }
-
       // Add new notes to the notes array to display
       if (potentialNewNotes.length > 0) {
         _.forEach(potentialNewNotes, (note) => {
@@ -552,6 +563,25 @@ class BandyPerformer {
   }
 
   /**
+   * Add or subtract number of selected semitones from all MIDI notes.
+   * This is a rough transposition that doesn't account for key or interval relationships
+   * of the original note sequence.
+   * @param {Number[]} _notes Array of MIDI notes.
+   * @return {Number[]} Array of transposed MIDI notes.
+   */
+  transposeNotes(_notes) {
+    return _notes.map((note) => note + this.instrumentTransposition);
+  }
+
+  /**
+   * Make sure selected range is a valid range i.e. high is > low.
+   * If not alert and don't allow storing.
+   */
+  checkNoteRange() {
+
+  }
+
+  /**
    *
    */
   buildInstrumentSettings() {
@@ -581,6 +611,37 @@ class BandyPerformer {
       this.performerRangeLowSetting.appendChild(optionA);
       this.performerRangeHighSetting.appendChild(optionB);
     });
+
+    // Transposition
+    _.forEach(TRANSPOSITIONS, (transpose) => {
+      const option = document.createElement('option');
+      option.textContent =
+        `${transpose.semitones} semitones | (${transpose.interval})`;
+      option.value = transpose.semitones;
+      this.performerInstrumentTranspositionSetting.appendChild(option);
+    });
+  }
+
+  /**
+   *  @param {String} instrument Performer selected instrument.
+   */
+  fillDefaultInstrumentData(instrument) {
+    const defaultInstrumentSettings = INSTRUMENTS[instrument];
+    this.performerInstrumentClefSetting.value = defaultInstrumentSettings.clef;
+    this.performerRangeLowSetting.value =
+      defaultInstrumentSettings.range.low.noteName;
+    this.performerRangeHighSetting.value =
+      defaultInstrumentSettings.range.high.noteName;
+    this.performerInstrumentTranspositionSetting.value =
+      defaultInstrumentSettings.transposition;
+    switch (defaultInstrumentSettings.accidentals) {
+      case 'sharps':
+        this.sharpsRadio.checked = true;
+        break;
+      case 'flats':
+        this.flatsRadio.checked = true;
+        break;
+    };
   }
 
   /**
@@ -697,6 +758,7 @@ class BandyPerformer {
    *
    */
   updateSettings() {
+    this.checkNoteRange();
     // store settings in the database
     this.database.ref().child(this.performersPath)
         .child(this.performerAuthInfo.uid)
@@ -704,7 +766,7 @@ class BandyPerformer {
           name: this.performerNameSetting.value,
           instrument: this.performerInstrumentNameSetting.value,
           clef: this.performerInstrumentClefSetting.value,
-          transposition: this.performerInstrumentTranspositionSetting,
+          transposition: this.performerInstrumentTranspositionSetting.value,
           range: {
             low: {
               noteName: this.performerRangeLowSetting.value,

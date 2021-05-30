@@ -42,7 +42,6 @@ console.debug = (...args) => {
  * These MIDI events can be sent to MIDI devices connected to the Controller computer. Generated
  * MIDI events are also stored to the database for access by the bandy Performers.
  *
- * @todo add ability to clear notes from database
  * @todo add tabs to the settings pane https://www.w3schools.com/howto/howto_js_tabs.asp
  */
 class BandyController {
@@ -72,6 +71,7 @@ class BandyController {
     this.updateSettingsAction = document.querySelector('#storeSettings');
     this.clearPlayersAction = document.querySelector('#clearPlayers');
     this.clearStatsAction = document.querySelector('#clearStats');
+    this.clearNotesAction = document.querySelector('#clearNotes');
 
     this.playerCount = document.querySelector('#playerCount');
 
@@ -167,6 +167,9 @@ class BandyController {
     };
     this.clearStatsAction.onclick = () => {
       this.clearStats();
+    };
+    this.clearNotesAction.onclick = () => {
+      this.clearNotes();
     };
     this.updateSettingsAction.onclick = () => {
       this.updateSettings();
@@ -268,7 +271,7 @@ class BandyController {
       }
     });
     let numberOfPlayers;
-    console.log(playerStates);
+    console.debug(playerStates);
     if (playerStates === null) {
       numberOfPlayers = 0;
     } else {
@@ -328,6 +331,19 @@ class BandyController {
     } else {
     }
   }
+
+  /**
+   *
+   */
+  clearNotes() {
+    const result =
+      confirm('Are you sure you want to remove the Notes from the database?');
+    if (result) {
+      this.notesRef.remove();
+    } else {
+    }
+  }
+
   /**
    *
    */
@@ -454,7 +470,7 @@ class BandyController {
    *
    */
   onWindowResize() {
-    OCTAVES = window.innerWidth > 700 ? 7 : 3;
+    // OCTAVES = window.innerWidth > 700 ? 7 : 3;
     // starts on an A, ends on a C.
     const bonusNotes = OCTAVES > 6 ? 4 : 0;
     const totalNotes = CONSTANTS.NOTES_PER_OCTAVE * OCTAVES + bonusNotes;
