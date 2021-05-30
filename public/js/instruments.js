@@ -141,9 +141,9 @@ const INSTRUMENTS = { // eslint-disable-line no-unused-vars
         midiNote: 72,
       },
     },
-    clef: 'subbass',
+    clef: 'bass',
     accidentals: 'sharps',
-    transposition: 0,
+    transposition: 12,
   },
   guitar: {
     range: {

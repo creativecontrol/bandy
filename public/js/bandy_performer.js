@@ -3,6 +3,7 @@
  * @todo add a check that high range is higher than low range and alert if it isn't when either is changed
  * @todo Adjust CSS for better spacing of UI elements (more padding)
  * @todo move MIDI UI stuff to a new class
+ * @todo allow performer to switch between transposed and dropped out of range notes
  */
 
 console.debugging = false;
@@ -170,9 +171,16 @@ class BandyPerformer {
           if (snapshot.exists()) {
             console.debug('performer exists');
             this.contentUI.hidden = false;
-            this.connectToBandySettings();
-            this.connectToPerformerSettings(true);
-            this.run();
+            this.connectToBandySettings()
+                .then(() => {
+                  return this.connectToPerformerSettings(true);
+                })
+                .then(() => {
+                  this.run();
+                })
+                .catch(function(err) {
+                  console.error(err);
+                });
           } else {
             console.debug('No data available');
             this.setupUI.hidden = false;
@@ -182,8 +190,13 @@ class BandyPerformer {
               this.setupUI.hidden = true;
               this.contentUI.hidden = false;
               this.settingsModal.hidden = false;
-              this.connectToBandySettings();
-              this.run();
+              this.connectToBandySettings()
+                  .then(() => {
+                    this.run();
+                  })
+                  .catch(function(err) {
+                    console.error(err);
+                  });
             };
           }
         }).catch((error) => {
@@ -326,7 +339,7 @@ class BandyPerformer {
     const stave = new this.VF.Stave(10, 40, this.canvas.width,
         {left_bar: false});
 
-    stave.addClef(this.instrumentClef);
+    stave.setClef(this.instrumentClef);
     stave.setNoteStartX(stave.getNoteStartX() + this.staveStartPadding);
     return stave.setContext(this.context);
   }
@@ -411,27 +424,40 @@ class BandyPerformer {
 
   /**
    *
+   * @return {Promise}
    */
   connectToBandySettings() {
-    const settings = this.database.ref(`${this.room}/settings/`);
-    settings.on('value', (snapshot) => {
-      this.applyBandySettingsFromDatabase(snapshot.val());
+    return new Promise((resolve, reject) => {
+      const settings = this.database.ref(`${this.room}/settings/`);
+      settings.on('value', (snapshot) => {
+        this.applyBandySettingsFromDatabase(snapshot.val());
+      });
+      resolve(true);
     });
   }
 
   /**
    *
    * @param {boolean} firstLoad
+   * @return {Promise}
    */
   connectToPerformerSettings(firstLoad) {
-    // eslint-disable-next-line max-len
-    const settings = this.database.ref(`${this.performersPath}/${this.performerAuthInfo.uid}/`);
-    settings.on('value', (snapshot) => {
-      if (firstLoad) {
-        this.applyPerformerSettingsFromDatabase(snapshot.val(), true);
-      } else {
-        this.applyPerformerSettingsFromDatabase(snapshot.val());
-      }
+    return new Promise((resolve, reject) => {
+      // eslint-disable-next-line max-len
+      const settings = this.database.ref(`${this.performersPath}/${this.performerAuthInfo.uid}/`);
+      settings.on('value', (snapshot) => {
+        if (firstLoad) {
+          this.applyPerformerSettingsFromDatabase(snapshot.val(), true)
+              .then(() => {
+                resolve();
+              });
+        } else {
+          this.applyPerformerSettingsFromDatabase(snapshot.val())
+              .then(() => {
+                resolve();
+              });
+        }
+      });
     });
   }
 
@@ -666,76 +692,81 @@ class BandyPerformer {
    *
    * @param {*} settings
    * @param {*} updateSettings
+   * @return {Promise}
    */
   applyPerformerSettingsFromDatabase(settings, updateSettings=false) {
-    // update local variables
-    this.performerName = settings.name ? settings.name : '';
-    this.instrumentName = settings.instrument ? settings.instrument : '';
-    this.instrumentClef = settings.clef ? settings.clef : '';
-    this.instrumentRange = settings.range ? settings.range : '';
-    this.instrumentTransposition =
-      settings.transposition ? settings.transposition : '';
-    this.accidentalPreference =
-      settings.accidentals ? settings.accidentals : 'sharps';
-    this.numberOfNotes = settings.numberOfNotes ? settings.numberOfNotes : 6;
-    this.probability = settings.probability ? settings.probability : 1.0;
+    return new Promise((resolve, reject) => {
+      // update local variables
+      this.performerName = settings.name ? settings.name : '';
+      this.instrumentName = settings.instrument ? settings.instrument : '';
+      this.instrumentClef = settings.clef ? settings.clef : '';
+      this.instrumentRange = settings.range ? settings.range : '';
+      this.instrumentTransposition =
+        settings.transposition ? settings.transposition : '';
+      this.accidentalPreference =
+        settings.accidentals ? settings.accidentals : 'sharps';
+      this.numberOfNotes = settings.numberOfNotes ? settings.numberOfNotes : 6;
+      this.probability = settings.probability ? settings.probability : 1.0;
 
-    // update UI
-    this.performerNameUI.innerText = this.performerName;
-    this.performerInstrumentUI.innerText = this.instrumentName;
-    this.performerProbabilityUI.innerText = `${this.probability * 100}%`;
+      // update UI
+      this.performerNameUI.innerText = this.performerName;
+      this.performerInstrumentUI.innerText = this.instrumentName;
+      this.performerProbabilityUI.innerText =
+        `${Math.trunc(this.probability * 100.0)}%`;
 
-    if (this.instrumentName == 'midi') {
-      if (!WebMidi.enabled) {
-        this.initMidi();
+      if (this.instrumentName == 'midi') {
+        if (!WebMidi.enabled) {
+          this.initMidi();
+        }
+        this.midiUI.hidden = false;
+      } else {
+        this.midiUI.hidden = true;
       }
-      this.midiUI.hidden = false;
-    } else {
-      this.midiUI.hidden = true;
-    }
 
-    if (updateSettings) {
-      // update settings menu
-      this.performerNameSetting.value = this.performerName;
-      this.performerInstrumentNameSetting.value = this.instrumentName;
-      this.performerInstrumentClefSetting.value = this.instrumentClef;
-      this.performerRangeLowSetting.value =
-        _.has(this.instrumentRange, 'low.noteName') ?
-        this.instrumentRange.low.noteName : '';
-      this.performerRangeHighSetting.value =
-        _.has(this.instrumentRange, 'high.noteName') ?
-        this.instrumentRange.high.noteName : '';
-      this.performerInstrumentTranspositionSetting.value =
-        this.instrumentTransposition;
-      this.performerAccidentalSetting = this.accidentalPreference;
-      switch (this.performerAccidentalSetting) {
-        case 'sharps':
-          this.sharpsRadio.checked = true;
-          break;
-        case 'flats':
-          this.flatsRadio.checked = true;
-          break;
-        default:
-          this.sharpsRadio.checked = true;
-          break;
+      if (updateSettings) {
+        // update settings menu
+        this.performerNameSetting.value = this.performerName;
+        this.performerInstrumentNameSetting.value = this.instrumentName;
+        this.performerInstrumentClefSetting.value = this.instrumentClef;
+        this.performerRangeLowSetting.value =
+          _.has(this.instrumentRange, 'low.noteName') ?
+          this.instrumentRange.low.noteName : '';
+        this.performerRangeHighSetting.value =
+          _.has(this.instrumentRange, 'high.noteName') ?
+          this.instrumentRange.high.noteName : '';
+        this.performerInstrumentTranspositionSetting.value =
+          this.instrumentTransposition;
+        this.performerAccidentalSetting = this.accidentalPreference;
+        switch (this.performerAccidentalSetting) {
+          case 'sharps':
+            this.sharpsRadio.checked = true;
+            break;
+          case 'flats':
+            this.flatsRadio.checked = true;
+            break;
+          default:
+            this.sharpsRadio.checked = true;
+            break;
+        }
+        this.performerNoteNumberSetting = this.numberOfNotes;
+        switch (this.performerNoteNumberSetting) {
+          case 5:
+            this.non5Radio.checked = true;
+            break;
+          case 6:
+            this.non6Radio.checked = true;
+            break;
+          case 7:
+            this.non7Radio.checked = true;
+            break;
+          default:
+            this.non6Radio.checked = true;
+            break;
+        }
+        this.performerProbabilitySetting.value = this.probability * 100;
       }
-      this.performerNoteNumberSetting = this.numberOfNotes;
-      switch (this.performerNoteNumberSetting) {
-        case 5:
-          this.non5Radio.checked = true;
-          break;
-        case 6:
-          this.non6Radio.checked = true;
-          break;
-        case 7:
-          this.non7Radio.checked = true;
-          break;
-        default:
-          this.non6Radio.checked = true;
-          break;
-      }
-      this.performerProbabilitySetting.value = this.probability * 100;
-    }
+      resolve();
+    });
   }
 
   /**
@@ -782,6 +813,9 @@ class BandyPerformer {
           accidentalPreference: this.performerAccidentalSetting,
           numberOfNotes: this.performerNoteNumberSetting,
           probability: this.performerProbabilitySetting.value * 0.01,
+        })
+        .then(() => {
+          this.draw();
         });
   }
 
