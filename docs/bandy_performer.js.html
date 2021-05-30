@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: bandy_performer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: bandy_performer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * bandy Performer
  * @todo add a check that high range is higher than low range and alert if it isn't
  * @todo autofill instrument params when selecting a new instrument
@@ -152,9 +180,9 @@ class BandyPerformer {
         firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
       ],
       // Terms of service url.
-      tosUrl: '<your-tos-url>',
+      tosUrl: '&lt;your-tos-url>',
       // Privacy policy url.
-      privacyPolicyUrl: '<your-privacy-policy-url>',
+      privacyPolicyUrl: '&lt;your-privacy-policy-url>',
     });
   }
 
@@ -324,7 +352,7 @@ class BandyPerformer {
    * Rest are positioned based on the center line of the instrument clef.
    */
   generateInitialNoteData() {
-    for (let i = 0; i<this.numberOfNotes; i++) {
+    for (let i = 0; i&lt;this.numberOfNotes; i++) {
       this.noteData.push({
         clef: this.instrumentClef,
         keys: [RESTNOTE[this.instrumentClef]],
@@ -383,7 +411,7 @@ class BandyPerformer {
    * Return a Vex.Flow formatted note name and octave for a midi note number
    * C4 = 60
    * @param {number} midiNote
-   * @return {String} Note and octace in Vex.Flow format <name><accidental>/<octave>
+   * @return {String} Note and octace in Vex.Flow format &lt;name>&lt;accidental>/&lt;octave>
    */
   getNoteNameAndOctave(midiNote) {
     const octave = WebMidi.getOctave(midiNote);
@@ -439,7 +467,7 @@ class BandyPerformer {
    * @param {Array} _notes
    */
   parseNotesFromDatabase(_notes) {
-    if (_notes && _notes.length > 0) {
+    if (_notes &amp;&amp; _notes.length > 0) {
       const incomingSlice = _notes.slice(this.numberOfNotes * -1);
       let lastNotes = [];
       if (this.lastNoteUpdate.slice(1)) {
@@ -464,7 +492,7 @@ class BandyPerformer {
       // filter for range and transposition
       if (potentialNewNotes.length > 0) {
         potentialNewNotes = this.rangeFilter(potentialNewNotes);
-        if (this.instrumentTransposition &&
+        if (this.instrumentTransposition &amp;&amp;
           this.instrumentTransposition != 'none') {
           // transpose the notes appropriately
         }
@@ -489,7 +517,7 @@ class BandyPerformer {
   probabilityOfUsingNote(_notes) {
     const potentialNewNotes =[];
     _.forEach(_notes, (note) => {
-      if (Math.random() < this.probability) {
+      if (Math.random() &lt; this.probability) {
         potentialNewNotes.push(note);
       }
     });
@@ -516,25 +544,25 @@ class BandyPerformer {
         // Either transpose notes into the range of the instrument
         // Or ignore notes that are outside of the range
 
-        if (note >= lowRange && note <= highRange ) {
+        if (note >= lowRange &amp;&amp; note &lt;= highRange ) {
           filteredNotes.push(note);
         } else if (this.fitNotesToRange) {
           let newNote = note;
           const potentialNewNotes =[];
           let direction;
-          if (note < lowRange) {
+          if (note &lt; lowRange) {
             direction = 12; // Add octaves
           } else if (note > highRange) {
             direction = -12; // subtract octaves
           }
 
           // transpose until it's in the range
-          while (newNote < lowRange || newNote > highRange) {
+          while (newNote &lt; lowRange || newNote > highRange) {
             newNote += direction;
           };
 
           // come up with all options in range
-          while (newNote >= lowRange && newNote <= highRange) {
+          while (newNote >= lowRange &amp;&amp; newNote &lt;= highRange) {
             potentialNewNotes.push(newNote);
             newNote += direction;
           };
@@ -736,3 +764,26 @@ class BandyPerformer {
 window.onload = () => {
   window.app = new BandyPerformer();
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BandyClient.html">BandyClient</a></li><li><a href="BandyController.html">BandyController</a></li><li><a href="BandyPerformer.html">BandyPerformer</a></li><li><a href="FloatyNotes.html">FloatyNotes</a></li><li><a href="Paddle.html">Paddle</a></li><li><a href="Piano.html">Piano</a></li><li><a href="Player.html">Player</a></li><li><a href="Tombola.html">Tombola</a></li></ul><h3>Global</h3><ul><li><a href="global.html#degToRad">degToRad</a></li><li><a href="global.html#ENTIRE_NOTE_RANGE">ENTIRE_NOTE_RANGE</a></li><li><a href="global.html#findDistance">findDistance</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#INSTRUMENTS">INSTRUMENTS</a></li><li><a href="global.html#MAPPING_4">MAPPING_4</a></li><li><a href="global.html#MAPPING_8">MAPPING_8</a></li><li><a href="global.html#NOTES">NOTES</a></li><li><a href="global.html#OCTAVES">OCTAVES</a></li><li><a href="global.html#OFF">OFF</a></li><li><a href="global.html#ON">ON</a></li><li><a href="global.html#polToCar">polToCar</a></li><li><a href="global.html#RESTNOTE">RESTNOTE</a></li><li><a href="global.html#roundRect">roundRect</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 29 2021 17:35:17 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

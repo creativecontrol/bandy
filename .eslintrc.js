@@ -14,6 +14,7 @@ module.exports = {
   ],
   'rules': {
     'max-len': [2, 80, 4, {
+      'ignoreComments': true,
       'ignoreTrailingComments': true,
       'ignoreUrls': true,
     }],

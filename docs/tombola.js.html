@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: tombola.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: tombola.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Tombola game
+ */
+class Tombola { // eslint-disable-line no-unused-vars
+  /**
+   *
+   * @param {*} _canvas
+   * @param {*} _context
+   * @param {*} _parent
+   */
+  constructor(_canvas, _context, _parent) {
+    this.canvas = _canvas;
+    this.context = _context;
+    this.parent = _parent;
+
+    this.instructionTime = 14000;
+    this.instructionText = `
+      &lt;h3> Tombola Game Instructions &lt;/h3>
+      Tap the screen or press the spacebar, that's it ! &lt;/br>
+      &lt;/br>
+      Use the Info Button above for Help &lt;/br>
+      `;
+
+    // Hide the paddle in the background.
+    // It is only used as a ball starting position.
+    this.paddleColor = '#333333';
+    this.paddleWidthScreenPortion = 0.2;
+    this.paddleWidth = this.canvas.width*this.paddleWidthScreenPortion;
+    this.paddleHeight = 15;
+    this.paddleBottomPadding = 0;
+    this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
+    this.paddleY = this.canvas.height -
+      (this.paddleHeight + this.paddleBottomPadding);
+    this.paddleCenter = this.paddleX + (this.paddleWidth / 2);
+
+    this.ballColor = '#CA7C7C';
+    this.ballX = canvas.width/2;
+    this.ballY = canvas.height-30;
+    this.ballRadius = 10;
+
+    this.ballStopped = true;
+    this.ballRefreshing = false;
+    this.refreshTime = 700;
+
+    this.ballSpeed = 3;
+    this.ball = {
+      x: this.paddleCenter,
+      y: this.paddleY - this.ballRadius,
+    };
+
+    this.move = {
+      x: this.ballSpeed,
+      // Start at a random angle
+      y: -this.ballSpeed * Math.cos((Math.PI / 180) *
+        ((90 * (Math.random())) - 45)),
+    };
+
+    this.tombolaSize = 105;
+    this.tombolaRotation = Date.now()/50 % 360;
+
+    this.numberOfPanels = 8;
+    this.panelRotations = [90, -45, 0, 45, 90, -45, 0, 45];
+    this.panelColors = [
+      ['#EE2B29', '#f25a58'],
+      ['#ff9800', '#ffad33'],
+      ['#e6e600', '#ffff00'],
+      ['#b2e600', '#c6ff00'],
+      ['#00cee6', '#00e5ff'],
+      ['#2979ff', '#5c99ff'],
+      ['#651fff', '#8852ff'],
+      ['#bf00e0', '#dd14ff'],
+    ];
+
+    this.panelsHit = new Array(this.numberOfPanels).fill(0);
+    this.panelStatusResetTime = 150;
+
+    this.panelSize = {
+      w: 35,
+      h: 15,
+    };
+
+    this.panelPositions = [
+      {radius: this.tombolaSize, theta: 0},
+      {radius: this.tombolaSize, theta: 45},
+      {radius: this.tombolaSize, theta: 90},
+      {radius: this.tombolaSize, theta: 135},
+      {radius: this.tombolaSize, theta: 180},
+      {radius: this.tombolaSize, theta: 225},
+      {radius: this.tombolaSize, theta: 270},
+      {radius: this.tombolaSize, theta: 315},
+    ];
+
+    this.panelGroupCenter = {
+      x: this.canvas.width/2 - 30,
+      y: this.canvas.height * 0.37,
+    };
+
+    this.hitCounter = 0;
+    this.hitMax = 100;
+  };
+
+  /**
+   *
+   */
+  setInstructions() {
+    this.parent.instructions.innerHTML = this.instructionText;
+  }
+
+  /**
+   *
+   */
+  drawInstructions() {
+    // Show instructions text and then fade it out.
+    this.parent.instructions.className = 'fadeIn';
+    setTimeout(() => {
+      this.parent.instructions.className = 'fadeOut';
+    }, this.instructionTime);
+  }
+
+  /**
+   *
+   */
+  update() {
+    this.drawPaddle();
+    this.drawGuides();
+    this.drawTombola();
+    this.drawBall();
+  }
+
+  /**
+   * Deal with the resizing of the window
+   */
+  resize() {
+    // Tombola position
+    this.panelGroupCenter = {
+      x: this.canvas.width/2,
+      y: this.canvas.height/4,
+    };
+
+    // Paddle position/size
+    this.paddleWidth = this.canvas.width*this.paddleWidthScreenPortion;
+    this.paddleX = (this.canvas.width - this.paddleWidth) / 2;
+    this.paddleY = this.canvas.height -
+      (this.paddleHeight + this.paddleBottomPadding);
+    this.paddleCenter = this.paddleX + (this.paddleWidth / 2);
+
+    // Ball positon
+    this.ball.x = this.paddleCenter;
+    this.ball.y = this.paddleY - this.ballRadius;
+  }
+  /**
+   *
+   */
+  drawBall() {
+    if (!this.ballRefreshing) {
+      this.context.beginPath();
+      this.context.arc(this.ball.x, this.ball.y, this.ballRadius, 0, Math.PI*2);
+      this.context.fillStyle = this.ballColor;
+      this.context.fill();
+      this.context.closePath();
+    }
+
+    if (this.ballStopped) {
+      this.ball.x = this.paddleCenter;
+    } else {
+      // console.log(`Ball X: ${this.ballX} Ball Y: ${this.ballY}`);
+      this.checkBounds();
+      this.checkPanelCollisions();
+
+      this.ball.x += this.move.x;
+      this.ball.y += this.move.y;
+    }
+  };
+
+  /**
+   *
+   */
+  refreshBall() {
+    this.ballSpeed = 3;
+    // Start at a random angle
+    this.move.x = this.ballSpeed * this.randomAngle();
+    this.move.y = -this.ballSpeed;
+
+    // console.log(this.move.y);
+    this.hitCounter = 0;
+    this.ballRefreshing = false;
+  }
+
+  /**
+   *
+   * @return {*}
+   */
+  randomAngle() {
+    return (Math.PI / 180) * ((90 * (Math.random())) - 45);
+  }
+
+  /**
+   *
+   */
+  drawPaddle() {
+    // this.movePaddle();
+
+    this.context.fillStyle = this.paddleColor;
+    roundRect(this.context, this.paddleX, this.paddleY,
+        this.paddleWidth, this.paddleHeight, this.paddleRadius, true, false);
+  };
+
+  /**
+   *
+   */
+  drawGuides() {
+
+  };
+
+  /**
+   *
+   */
+  drawTombola() {
+    this.tombolaRotation = Date.now()/50 % 360;
+
+    this.panelPositions.forEach((position, index) => {
+      const panelPosition = polToCar(
+          position.radius,
+          position.theta + this.tombolaRotation,
+      );
+      const panelCenter = {
+        x: panelPosition.x + (0.5 * this.panelSize.w) + this.panelGroupCenter.x,
+        y: panelPosition.y + (0.5 * this.panelSize.h) + this.panelGroupCenter.y,
+      };
+
+      // draw the panel
+      this.context.beginPath();
+      this.context.save();
+      this.context.translate(panelCenter.x, panelCenter.y);
+      this.context.rotate(degToRad(this.panelRotations[index] +
+        this.tombolaRotation));
+      this.context.translate(-panelCenter.x, -panelCenter.y);
+      this.context.fillStyle = this.panelColors[index][this.panelsHit[index]];
+      this.context.fillRect(panelCenter.x - this.panelSize.w/2,
+          panelCenter.y - this.panelSize.h/2,
+          this.panelSize.w, this.panelSize.h);
+      if (this.panelsHit[index]) {
+        this.context.strokeStyle =
+          this.panelColors[index][this.panelsHit[index]];
+        this.context.lineWidth = 5;
+        this.context.strokeRect(panelCenter.x - this.panelSize.w/2,
+            panelCenter.y - this.panelSize.h/2,
+            this.panelSize.w, this.panelSize.h);
+      }
+
+      this.context.closePath();
+      this.context.restore();
+    });
+  };
+
+  /**
+ *
+ */
+  checkBounds() {
+    // Check collision with Guides and Paddle
+
+    if (this.ball.x + this.move.x > (this.canvas.width - this.ballRadius) ||
+      this.ball.x + this.move.x &lt; this.ballRadius) {
+      this.move.x = -this.move.x;
+    }
+
+    if (this.ball.y + this.move.y &lt; this.ballRadius) {
+      this.move.y = -this.move.y;
+    } else if (this.ball.y + this.move.y >
+        (this.paddleY - this.ballRadius) &amp;&amp;
+        this.ball.y + this.move.y &lt;
+          this.paddleY - this.ballRadius + this.paddleHeight &amp;&amp;
+        this.ball.x > this.paddleX &amp;&amp;
+        this.ball.x &lt; this.paddleX + this.paddleWidth) {
+      // this.moveY = -this.moveY;
+
+      // const angle = (Math.PI/180) * 120 *
+      //   ((this.paddleCenter - this.ball.x)/ this.paddleWidth);
+
+      // this.ballSpeed += 0.2;
+      // this.move.y = -this.ballSpeed * Math.cos(angle);
+      // this.move.x = -this.ballSpeed * Math.sin(angle);
+    } else if (this.ball.y + this.move.y >
+      (this.canvas.height - this.ballRadius)) {
+      // if at the bottom, reset
+      this.ball.x = this.paddleCenter;
+      this.ball.y = this.paddleY - this.ballRadius;
+      this.ballStopped = true;
+      this.ballRefreshing = true;
+      this.move.x = this.ballSpeed;
+      this.move.y = -this.ballSpeed;
+
+      setTimeout(this.refreshBall.bind(this), this.refreshTime);
+    }
+  };
+
+  /**
+   * Based on circle rotated rect collision
+   * http://www.migapro.com/circle-and-rotated-rectangle-collision-detection/
+   */
+  checkPanelCollisions() {
+    this.panelRotations.forEach((panelRotation, index) => {
+      const panelPosition = polToCar(
+          this.panelPositions[index].radius,
+          this.panelPositions[index].theta + this.tombolaRotation,
+      );
+
+      const panelCenter = {
+        x: panelPosition.x + (0.5 * this.panelSize.w) + this.panelGroupCenter.x,
+        y: panelPosition.y + (0.5 * this.panelSize.h) + this.panelGroupCenter.y,
+      };
+
+      const panelAngle = degToRad(panelRotation + this.tombolaRotation);
+
+      const unrotatedBallX = Math.cos(panelAngle) *
+        (this.ball.x - panelCenter.x) -
+        Math.sin(panelAngle) * (this.ball.y - panelCenter.y) +
+        panelCenter.x;
+      const unrotatedBallY = Math.sin(panelAngle) *
+        (this.ball.x - panelCenter.x) +
+        Math.cos(panelAngle) * (this.ball.y - panelCenter.y) +
+        panelCenter.y;
+
+      // DEBUGGING Hit Geometry
+      // this.context.beginPath();
+      // this.context.arc(unrotatedBallX, unrotatedBallY, 4, 0, Math.PI*2);
+      // this.context.fillStyle = '#DDF';
+      // this.context.fill();
+      // this.context.closePath();
+
+      // this.context.beginPath();
+      // this.context.arc(panelCenter.x, panelCenter.y, 4, 0, Math.PI*2);
+      // this.context.strokeStyle = '#FFF';
+      // this.context.stroke();
+      // this.context.closePath();
+
+      /*
+       * Closest point in the rectangle to
+       * the center of circle rotated backwards(unrotated)
+       */
+      const closest = {
+        x: 0,
+        y: 0,
+      };
+
+      // Should the panelSizes be divided by two?
+
+      // Find the unrotated closest x point from center of unrotated circle
+      if (unrotatedBallX &lt; panelCenter.x - this.panelSize.w/2) {
+        closest.x = panelCenter.x - this.panelSize.w/2;
+      } else if (unrotatedBallX > panelCenter.x + this.panelSize.w/2) {
+        closest.x = panelCenter.x + this.panelSize.w/2;
+      } else {
+        closest.x = unrotatedBallX;
+      }
+
+      // Find the unrotated closest y point from center of unrotated circle
+      if (unrotatedBallY &lt; panelCenter.y - this.panelSize.h/2) {
+        closest.y = panelCenter.y - this.panelSize.h/2;
+      } else if (unrotatedBallY > panelCenter.y + this.panelSize.h/2) {
+        closest.y = panelCenter.y + this.panelSize.h/2;
+      } else {
+        closest.y = unrotatedBallY;
+      }
+
+      // Determine collision
+      const distance = findDistance(unrotatedBallX, unrotatedBallY,
+          closest.x, closest.y);
+      if (distance &lt; this.ballRadius) {
+        if (this.panelsHit[index] == 0) {
+          this.ballSpeed += 0.01;
+          this.move.y = -this.move.y;
+          this.move.x = -this.move.x * this.randomAngle();
+          // console.log(`Move x after hit: ${this.move.x}`);
+          this.panelHit(index);
+        }
+      }
+    });
+  }
+
+  // checkPanelCollisions() {
+  //   // console.log('checking block collision');
+  //   for (let i = 0; i &lt; this.numberOfPanels; i++) {
+  //     const leftEdge = this.blocksLeft +
+  //       ((this.blockSize + this.blockSpacing)*i);
+  //     const rightEdge = leftEdge + this.blockSize;
+  //     const topEdge = this.blocksY;
+  //     const bottomEdge = topEdge + this.blockSize;
+
+  //     // console.log(`l: ${leftEdge} r: ${rightEdge}`);
+
+  //     if (this.ballX > leftEdge &amp;&amp; this.ballX &lt; rightEdge &amp;&amp;
+  //       this.ballY > topEdge &amp;&amp; this.ballY &lt; bottomEdge ) {
+  //       console.debug('collision');
+  //       if (this.blocksHit[i] == 0) {
+  //         this.moveY = -this.moveY;
+  //         this.blockHit(i);
+  //       }
+  //     }
+  //   }
+
+  // };
+
+  /**
+   *
+   * @param {int} panel
+   */
+  panelHit(panel) {
+    console.debug('You hit panel ', panel);
+    this.flashPanel(panel);
+    this.hitLimiter();
+  }
+
+  /**
+   *
+   */
+  hitLimiter() {
+    this.hitCounter += 1;
+
+    if (this.hitCounter > this.hitMax) {
+      this.ball.x = this.paddleCenter;
+      this.ball.y = this.paddleY - this.ballRadius;
+      this.ballStopped = true;
+      this.ballRefreshing = true;
+      this.move.x = this.ballSpeed;
+      this.move.y = -this.ballSpeed;
+
+      setTimeout(this.refreshBall.bind(this), this.refreshTime);
+    }
+  }
+
+  /**
+   *
+   * @param {int} panel
+   */
+  flashPanel(panel) {
+    this.panelsHit[panel] = 1;
+    // Set the value in the database here
+    let status = {};
+    status[panel.toString()] = ON;
+    this.parent.playerId.update(status);
+    setTimeout(() => {
+      this.panelsHit[panel] = 0;
+      // Set the value in the database here
+      status = {};
+      status[panel.toString()] = OFF;
+      this.parent.playerId.update(status);
+    }, this.panelStatusResetTime);
+  }
+} // End of Tombola Class
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BandyClient.html">BandyClient</a></li><li><a href="BandyController.html">BandyController</a></li><li><a href="BandyPerformer.html">BandyPerformer</a></li><li><a href="FloatyNotes.html">FloatyNotes</a></li><li><a href="Paddle.html">Paddle</a></li><li><a href="Piano.html">Piano</a></li><li><a href="Player.html">Player</a></li><li><a href="Tombola.html">Tombola</a></li></ul><h3>Global</h3><ul><li><a href="global.html#degToRad">degToRad</a></li><li><a href="global.html#ENTIRE_NOTE_RANGE">ENTIRE_NOTE_RANGE</a></li><li><a href="global.html#findDistance">findDistance</a></li><li><a href="global.html#getRandomInt">getRandomInt</a></li><li><a href="global.html#INSTRUMENTS">INSTRUMENTS</a></li><li><a href="global.html#MAPPING_4">MAPPING_4</a></li><li><a href="global.html#MAPPING_8">MAPPING_8</a></li><li><a href="global.html#NOTES">NOTES</a></li><li><a href="global.html#OCTAVES">OCTAVES</a></li><li><a href="global.html#OFF">OFF</a></li><li><a href="global.html#ON">ON</a></li><li><a href="global.html#polToCar">polToCar</a></li><li><a href="global.html#RESTNOTE">RESTNOTE</a></li><li><a href="global.html#roundRect">roundRect</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 29 2021 17:35:17 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
