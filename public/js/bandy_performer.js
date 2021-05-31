@@ -1,6 +1,6 @@
 /**
  * bandy Performer
- * @todo add a check that high range is higher than low range and alert if it isn't when either is changed
+ * @todo Make radio button text same as splash small
  * @todo Adjust CSS for better spacing of UI elements (more padding)
  * @todo move MIDI UI stuff to a new class
  */
@@ -56,6 +56,9 @@ class BandyPerformer {
     this.performerAccidentalSetting;
     this.performerOutOfRangeSetting;
     this.performerNoteNumberSetting;
+
+    this.rangeError = document.querySelector('#rangeError');
+    this.noteRangeIsValid = true;
 
     this.accidentalsAction = document.getElementsByName('accidentals');
     this.sharpsRadio = document.querySelector('#apSharpRadio');
@@ -259,8 +262,12 @@ class BandyPerformer {
 
     // Event listeners.
     this.updateSettingsAction.onclick = () => {
-      this.updateSettings();
-      this.settingsModal.hidden = true;
+      if (this.noteRangeIsValid) {
+        this.updateSettings();
+        this.settingsModal.hidden = true;
+      } else {
+        // Should I have an alert?
+      }
     };
     this.settingsAction.onclick = () => {
       this.settingsModal.hidden = !this.settingsModal.hidden;
@@ -291,6 +298,7 @@ class BandyPerformer {
     this.performerInstrumentNameSetting.onchange = () => {
       const instrument = this.performerInstrumentNameSetting.value;
       this.fillDefaultInstrumentData(instrument);
+      this.checkNoteRange();
     };
 
     this.performerRangeLowSetting.onchange = () => {
@@ -616,7 +624,14 @@ class BandyPerformer {
    * If not alert and don't allow storing.
    */
   checkNoteRange() {
-
+    if (WebMidi.noteNameToNumber(this.performerRangeHighSetting.value) >
+      WebMidi.noteNameToNumber(this.performerRangeLowSetting.value) ) {
+      this.noteRangeIsValid = true;
+      this.rangeError.hidden = true;
+    } else {
+      this.noteRangeIsValid = false;
+      this.rangeError.hidden = false;
+    }
   }
 
   /**

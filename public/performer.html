@@ -113,10 +113,16 @@
       
       <label for="rangeHighSetting">High</label>
       <select id="rangeHighSetting"></select>
+
+      <span id="rangeError" hidden>! Error - low > high. Cannot store.</span>  
     </div>
     <div class="settingParam">
       <label for="transpositionSetting">Transposition</label>
       <select id="transpositionSetting"></select>
+    </div>
+    <div class="settingParam horiz">
+      <label for="probabilitySetting">Note update probability percentage</label>
+      <input name="probability" type="number" id="probabilitySetting" min="5" max="100" step="5"> %
     </div>
 
     <div class="settingParam">
@@ -152,10 +158,7 @@
         <label for="non7Radio">7</label>
       </div>
     </div>
-    <div class="settingParam horiz">
-      <label for="probabilitySetting">Note update probability percentage</label>
-      <input name="probability" type="number" id="probabilitySetting" min="5" max="100" step="5">
-    </div>
+    
 
     <div class="apply">
       

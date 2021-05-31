@@ -469,3 +469,7 @@ label.radio > .control-indicator {
   background-color: #C77C7C88;
   color: black;
 }
+
+#rangeError {
+  color: #EE2B29;
+}
