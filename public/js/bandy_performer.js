@@ -1,8 +1,7 @@
 /**
  * bandy Performer
- * @todo Make radio button text same as splash small
- * @todo Adjust CSS for better spacing of UI elements (more padding)
- * @todo move MIDI UI stuff to a new class
+ * @todo Add additional params for midi instruments to settings (duration, channel)
+ * @todo Add velocity from Piano Genie and pass to the Performer
  */
 
 console.debugging = false;
@@ -78,11 +77,13 @@ class BandyPerformer {
       document.querySelector('#performerInstrument');
     this.performerProbabilityUI =
       document.querySelector('#performerProbability');
-    this.midiUI = document.querySelector('.midi');
+    this.midi;
     this.midiInitButton = document.querySelector('#midiInactive');
     this.midiOutputSelector = document.querySelector('#midiOutputSelect');
+    this.midiUI = document.querySelector('.midi');
 
     this.headerSize = 60;
+    this.performerInfoHeight = 150;
 
     this.eventURL = '';
     this.projectWebsite = '';
@@ -114,7 +115,7 @@ class BandyPerformer {
     this.probability = 1.0;
     this.outOfRangeNotes = 'fit';
     this.noteData = [];
-    this.currentMidiOutput = '';
+    // this.currentMidiOutput = '';
     this.lastNoteUpdate = [];
 
     this.VF = Vex.Flow;
@@ -124,6 +125,7 @@ class BandyPerformer {
     this.context;
     this.stavePercentOfCavnvas = 0.8;
     this.staveStartPadding = 40;
+    this.staveHighNoteBuffer = 60;
 
     // Initialize the FirebaseUI Widget using Firebase.
     this.firebaseLogin = new firebaseui.auth.AuthUI(firebase.auth());
@@ -146,9 +148,9 @@ class BandyPerformer {
         },
         uiShown: function() {
           // What to do when the widget is rendered.
-
         },
       },
+      signInFlow: 'popup',
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -213,37 +215,12 @@ class BandyPerformer {
   }
 
   /**
-   * If the instrument type is MIDI initialize WebMidi
-   * and display the output selector.
+   * If the instrument type is MIDI initialize WebMidiInterface.
    */
   initMidi() {
-    WebMidi.enable((err) => {
-      if (err) {
-        console.warn('WebMidi could not be enabled.', err);
-        return;
-      } else {
-        console.info('WebMidi enabled!');
-        for (const output of WebMidi.outputs) {
-          const outputOption = document.createElement('option');
-          outputOption.value = output.id;
-          outputOption.textContent = output.name;
-          this.midiOutputSelector.appendChild(outputOption);
-        }
-        this.onMidiOutputChange();
-      }
-    });
-  }
-
-  /**
-   * Update MIDI interface when user selects from the dropdown.
-   */
-  onMidiOutputChange() {
-    const outputId = this.midiOutputSelector.value;
-    if (outputId === 'internal') {
-      this.currentMidiOutput = null;
-    } else {
-      this.currentMidiOutput = WebMidi.getOutputById(outputId);
-    }
+    this.midi = new WebMIDIInterface({_outputSelector:
+      this.midiOutputSelector});
+    this.midi.init();
   }
 
   /**
@@ -297,6 +274,9 @@ class BandyPerformer {
 
     this.performerInstrumentNameSetting.onchange = () => {
       const instrument = this.performerInstrumentNameSetting.value;
+      if (instrument == 'midi') {
+        this.initMidi();
+      }
       this.fillDefaultInstrumentData(instrument);
       this.checkNoteRange();
     };
@@ -324,7 +304,8 @@ class BandyPerformer {
     this.canvas.width =
       this.canvas.parentElement.clientWidth * this.stavePercentOfCavnvas;
     this.canvas.height =
-      this.canvas.parentElement.clientHeight - this.headerSize;
+      this.canvas.parentElement.clientHeight - this.headerSize -
+        this.performerInfoHeight;
   }
 
   /**
@@ -352,11 +333,11 @@ class BandyPerformer {
    * Create a VF stave the width of the canvas with no starting line
    * on the left. Add a clef based on the performer instrument.
    * @return {Vex.Flow.Stave}
-   * @todo remove magic numbers from stave drawing
    */
   drawStave() {
     // Create a stave at position 10, 40
-    const stave = new this.VF.Stave(10, 40, this.canvas.width,
+    const stave = new this.VF.Stave(0, this.staveHighNoteBuffer,
+        this.canvas.width,
         {left_bar: false});
 
     stave.setClef(this.instrumentClef);
@@ -528,9 +509,12 @@ class BandyPerformer {
         }
       }
       // Add new notes to the notes array to display
+      // and if this is a MIDI instrument, play the note.
       if (potentialNewNotes.length > 0) {
         _.forEach(potentialNewNotes, (note) => {
           this.addNote(note);
+          this.midi.currentMidiOutput
+              .playNote(note, {velocity: 90, duration: 250});
         });
       }
     }
@@ -744,7 +728,7 @@ class BandyPerformer {
         `${Math.trunc(this.probability * 100.0)}%`;
 
       if (this.instrumentName == 'midi') {
-        if (!WebMidi.enabled) {
+        if (this.midi == undefined || this.midi == null) {
           this.initMidi();
         }
         this.midiUI.hidden = false;
@@ -850,7 +834,8 @@ class BandyPerformer {
             high: {
               noteName: this.performerRangeHighSetting.value,
               midiNote:
-                WebMidi.noteNameToNumber(this.performerRangeHighSetting.value),
+                WebMidi.noteNameToNumber(
+                    this.performerRangeHighSetting.value),
             },
           },
           accidentalPreference: this.performerAccidentalSetting,

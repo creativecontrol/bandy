@@ -33,6 +33,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vexflow/3.0.9/vexflow-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous"></script>
     <script src="js/helpers.js" defer></script>
+    <script src="js/web-midi-interface.js" defer></script>
     <script src="js/instruments.js" defer></script>
     <script src="js/bandy_performer.js" defer></script>
 </head>
@@ -45,11 +46,27 @@
   <div class="background"></div>
   <div class="login">
     <div>
-      Please login with one of the following options so we can store your preferences. <br>
-      No personal information will be shared with anyone.<br>
-      You can also continue as a guest if you don't want to sign in and you will have to set your preferences manually on each visit.
+      <p>
+        Please login with one of the following options so we can store your preferences.
+      </p>
+      <div>
+        <img src="./images/bandy-dot.png" alt="">
+      </div>
+      <p>      
+        No personal information will be shared with anyone.
+      </p>
+      <div>
+        <img src="./images/bandy-dot.png" alt="">
+      </div>
+      <p>
+        You can also continue as a guest if you don't want to sign in and you will have to set your preferences manually on each visit.
+      </p>
+      <div>
+        <img src="./images/bandy-dot.png" alt="">
+      </div>
     </div>
     <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading...</div>
   </div>
 
   <div class="content" hidden>
@@ -126,8 +143,8 @@
     </div>
 
     <div class="settingParam">
-      Accidentals preference <br>
-      <div id="" class="centered radioSet">
+      <label for="accidentalsSetting">Accidentals preference</label>
+      <div id="accidentalsSetting" class="centered radioSet">
         <input type="radio" value="sharps" id="apSharpRadio" name="accidentals">
         <label for="apSharpRadio">sharps</label>
       
@@ -136,8 +153,8 @@
       </div>
     </div>
     <div class="settingParam">
-      Out of range notes <br>
-      <div id="" class="centered radioSet">
+      <label for="outOfRangeSetting">Out of range notes </label>
+      <div id="outOfRangeSetting" class="centered radioSet">
         <input type="radio" value="fit" id="outOfRangeFit" name="outOfRange">
         <label for="outOfRangeFit">fit range</label>
       
@@ -146,8 +163,8 @@
       </div>
     </div>
     <div class="settingParam">
-      Number of Notes to display <br>
-      <div id="" class="centered radioSet">
+      <label for="numberOfNotesSetting">Number of Notes to display </label>
+      <div id="numberOfNotesSetting" class="centered radioSet">
         <input type="radio" value="5" id="non5Radio" name="numberOfNotes">
         <label for="non5Radio">5</label>
       

@@ -45,8 +45,10 @@ body {
 .color-7 { background: #d500f9;; fill: #d500f9; }
 
 .login {
+  font-size: 20px;
+  margin: 0 auto;
   position: absolute;
-  width: 100%;
+  width: 40%;
   top: 130px;
   left: 0;
   right: 0;
@@ -88,8 +90,9 @@ body {
   display: inline-block;
   font-weight: 900;
   font-size: large;
+  margin: 5px;
   padding: 5px;
-  width: 200px;
+  width: 25%;
 }
 
 .midi select {
@@ -97,6 +100,7 @@ body {
   font-family: inherit;
   border-radius: 15px;
   border: solid #C77C7C 2px;
+  margin: 5px;
   padding: 5px;
   /* background-color: #C77C7C; */
   /* color:#ebebeb; */
@@ -306,6 +310,13 @@ button.splash-button.small {
   padding: 8px;
 }
 
+.dialog .settingParam label{
+  margin: 8px;
+}
+.dialog .settingParam div label{
+  margin: inherit;
+}
+
 .dialog textarea {
   height: 60px;
   width: 100%;
@@ -352,6 +363,8 @@ label.radio {
   padding-left: 24px;
   margin-right: 24px;
   cursor: pointer;
+  font-size: 12px;
+  width: 150px;
 }
 label.radio > input[type="radio"] {
   position: absolute;
@@ -438,6 +451,10 @@ label.radio > .control-indicator {
   width: 150px;
 }
 
+.radioSet {
+  margin-top: 5px;
+}
+
 .radioSet input[type="radio"]{
   opacity: 0;
   position: fixed;
@@ -451,7 +468,7 @@ label.radio > .control-indicator {
   background-color: transparent;
   padding: 8px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bolder;
   text-align: center;
   text-transform: uppercase;
